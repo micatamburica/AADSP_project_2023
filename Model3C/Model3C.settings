@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+<clideViews>
+<clideView viewId="clide.debug.ui.registersView">
+<registerView regViewCoreName="DSP_A">
+<regViewMementoCore scrollPercent="NaN">
+<layoutType horizontal="0" register_details="1"/>
+<expandedPath item_0="DSP_A"/>
+</regViewMementoCore>
+</registerView>
+</clideView>
+</clideViews>
+<perspective id="CLIDE.DebugPerspective"/>
+<workbench_editors>
+<editor file_path="/Model3/.suldproj"/>
+<editor file_path="/Model3/src/main.cpp"/>
+<editor file_path="/Model3/crystal32.groovy"/>
+<editor file_path="/Model3/SimulatorConfigurationTemp.sbr"/>
+<editor file_path="/Model3/inc/common.h"/>
+</workbench_editors>
+<views/>
+<watchExpressions/>
+<launcherConfiguration/>
+<launchHistory>
+<launchGroup id="org.eclipse.ui.externaltools.launchGroup">&#x0A;<mruHistory/>
+<favorites/>
+</launchGroup>
+<launchGroup id="org.eclipse.debug.ui.launchGroup.profile">&#x0A;<mruHistory/>
+<favorites/>
+</launchGroup>
+<launchGroup id="org.eclipse.debug.ui.launchGroup.debug">&#x0A;<mruHistory>&#x0A;<launch memento="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#x0D;&#x0A;&lt;launchConfiguration local=&quot;true&quot; path=&quot;APP new Configuration&quot;/&gt;&#x0D;&#x0A;"/>
+</mruHistory>
+<favorites/>
+</launchGroup>
+<launchGroup id="org.eclipse.debug.ui.launchGroup.run">&#x0A;<mruHistory/>
+<favorites/>
+</launchGroup>
+</launchHistory>
+<projectSettings/>
+</settings>

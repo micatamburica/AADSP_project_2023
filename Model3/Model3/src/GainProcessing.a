@@ -1,0 +1,232 @@
+
+_GAINPROC_ASM
+
+.if defined (_GAINPROC_ASM)
+
+// Block size 
+_BLOCK_SIZE .equ 16
+
+// Channel IDs. 
+_LEFT_CH .equ 0
+_RIGHT_CH .equ 1
+_CENTER_CH .equ 2
+_LEFT_S_CH .equ 3
+_RIGHT_S_CH .equ 4
+
+_degree .equ 2.0
+
+	.public _gainProcessing
+	
+	.extern _GlobalInputGain
+	.extern _GlobalHeadroomGain
+	.extern _GlobalLimiterThreshold
+	.extern _ModeFlag
+	.extern _Minus_6DB
+	.extern _Minus_2DB
+	.extern _ASMDegree
+	.extern _ASMGain
+	
+ 	.code_ovly 
+ 	
+_gainProcessing:
+
+											#i0 is a pointer to inL
+											#i1 is a pointer to OutL
+	i4 = i0 + (_RIGHT_CH * _BLOCK_SIZE)		#i4 is a pointer to inR
+	i5 = i1 + (_RIGHT_CH * _BLOCK_SIZE)		#i5 is a pointer to OutR
+	i6 = i1 + (_CENTER_CH * _BLOCK_SIZE)	#i6 is a pointer to OutC
+	i2 = i1 + (_LEFT_S_CH * _BLOCK_SIZE)	#i2 is a pointer to OutLs
+	i3 = i1 + (_RIGHT_S_CH * _BLOCK_SIZE)   #i3 is a pointer to OutRs
+ 
+	do(_BLOCK_SIZE) ,>loop
+	
+	#1. INPUTGAIN FOR L AND R
+ 	x0 = ymem[i0]							#get the inL and inR values
+ 	x1 = ymem[i4]
+ 	y0 = xmem[_GlobalInputGain]				#get the GlobalInputGain
+ 	
+ 	a0 = x0 * y0		
+ 	a1 = x1 * y0
+ 	
+ 	#2. ADD L AND R TO C
+ 	b0 = 0
+ 	b0 = b0 + a0
+ 	b0 = b0 + a1
+ 	b1 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+ 	
+ 	b0 - b1
+ 	if (b < 0) jmp>checkIfMinusC			#checks if the value > threshold, otherwise
+ 		b0 = b1
+ 		jmp>saturatedC
+ 		
+%checkIfMinusC:								#checks if the value < -threshold
+	b1 = -b1
+	b0 - b1
+	if (b >= 0) jmp>saturatedC
+		b0 = b1
+		
+%saturatedC:								#end of saturation
+
+	#3. HEADROOMGAIN FOR C 
+	x0 = b0
+	y0 = xmem[_GlobalHeadroomGain]			#get the GlobalHeadroomGain
+	b0 = x0 * y0
+	
+	ymem[i6] = b0							#(END FOR C)
+	
+	#4. INVERTER FOR Ls AND Rs
+	
+	call functionInverter
+	
+	#5. -6DB FOR L AND R 
+	x0 = b0 
+	y0 = xmem[_Minus_6DB]					#get the -6DB
+	
+	b0 = x0 * y0
+	
+ 	ymem[i1] = b0							#(END FOR L)
+ 	ymem[i5] = b0							#(END FOR R)
+ 	
+ 	#6. -2DB FOR Ls AND Rs
+ 	
+ 	x0 = ymem[i2]
+ 	x1 = ymem[i3]
+ 	y0 = xmem[_Minus_2DB]					#get the -2DB
+ 	
+ 	a0 = x0 * y0
+ 	a1 = x1 * y0
+ 	
+ 	#7. ADD L AND R TO Ls AND Rs
+ 	
+ 	b1 = 0
+ 	b1 = b1 + a0
+ 	b1 = b1 + b0
+ 	
+ 	b2 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+ 	
+ 	b1 - b2
+ 	if (b < 0) jmp>checkIfMinusLs			#checks if the value > threshold, otherwise
+ 		b1 = b2
+ 		jmp>saturatedLs
+ 		
+%checkIfMinusLs:							#checks if the value < -threshold
+	b2 = -b2
+	b1 - b2
+	if (b >= 0) jmp>saturatedLs
+		b1 = b2
+		
+%saturatedLs:								#end of saturation
+ 	
+ 	ymem[i2] = b1							#(END FOR Ls)
+ 	
+ 	b1 = 0
+ 	b1 = b1 + a1
+ 	b1 = b1 + b0
+ 	
+ 	b2 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+ 	
+ 	b1 - b2
+ 	if (b < 0) jmp>checkIfMinusRs			#checks if the value > threshold, otherwise
+ 		b1 = b2
+ 		jmp>saturatedRs
+ 		
+%checkIfMinusRs:							#checks if the value < -threshold
+	b2 = -b2
+	b1 - b2
+	if (b >= 0) jmp>saturatedRs
+		b1 = b2
+		
+%saturatedRs:								#end of saturation
+ 	
+ 	ymem[i3] = b1							#(END FOR Rs)
+ 	
+ 	a0 = xmem[_ModeFlag]
+	a1 = 0
+ 	a0 - a1
+ 	if (a == 0) jmp>notMode0_2_0			#check to see if 0_2_0
+ 		b0 = ymem[i2]
+ 		b1 = ymem[i3]
+ 		ymem[i1] = b0
+ 		ymem[i5] = b1
+ 		
+%notMode0_2_0:
+
+ 	i0 += 1
+ 	i1 += 1
+ 	i4 += 1
+ 	i5 += 1
+ 	i6 += 1
+ 	i2 += 1
+ 	i3 += 1
+ 
+%loop: nop;
+ 
+	ret
+	
+functionInverter:
+
+	y0 = a0									#inL is in a0
+	y1 = a1									#inR is in a1
+
+	a0 = xmem[_ASMDegree]					#get degree
+	x0 = xmem[_ASMDegree ] 
+	x1 = xmem[_ASMGain]
+
+	a2h = 0x8000							#get dry
+	nop 
+	nop
+	nop
+	a2 = a2 - a0
+	y2 = a2
+	
+	b1 = y0 * y2							#VALUE OF L
+	b2 = y0 * x0
+	b1 = b1 - b2
+	x2 = b1
+	
+	b1 = x2 * x1
+	
+	b2 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+ 	
+ 	b1 - b2
+ 	if (b < 0) jmp>checkIfMinusL			#checks if the value > threshold, otherwise
+ 		b1 = b2
+ 		jmp>saturatedL
+ 		
+%checkIfMinusL:								#checks if the value < -threshold
+	b2 = -b2
+	b1 - b2
+	if (b >= 0) jmp>saturatedL
+		b1 = b2
+		
+%saturatedL:		
+
+	ymem[i2] = b1	
+	
+	b1 = y1 * y2							#VALUE OF R
+	b2 = y1 * x0
+	b1 = b1 - b2
+	x2 = b1
+	
+	b1 = x2 * x1
+	
+	b2 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+ 	
+ 	b1 - b2
+ 	if (b < 0) jmp>checkIfMinusR			#checks if the value > threshold, otherwise
+ 		b1 = b2
+ 		jmp>saturatedR
+ 		
+%checkIfMinusR:								#checks if the value < -threshold
+	b2 = -b2
+	b1 - b2
+	if (b >= 0) jmp>saturatedR
+		b1 = b2
+		
+%saturatedR:		
+
+	ymem[i3] = b1
+
+	ret
+ 
+ 	.endif

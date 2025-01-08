@@ -1,0 +1,219 @@
+1     						
+2     	 0000				_GAINPROC_ASM
+3     						
+4     						.if defined (_GAINPROC_ASM)
+5     						
+6     						// Block size 
+7     	 0010				_BLOCK_SIZE .equ 16
+8     						
+9     						// Channel IDs. 
+10    	 0000				_LEFT_CH .equ 0
+11    	 0001				_RIGHT_CH .equ 1
+12    	 0002				_CENTER_CH .equ 2
+13    	 0003				_LEFT_S_CH .equ 3
+14    	 0004				_RIGHT_S_CH .equ 4
+15    						
+16    	 0000				_degree .equ 2.0
+17    						
+18    	 0000					.public _gainProcessing
+19    							
+20    	 0000					.extern _GlobalInputGain
+21    	 0000					.extern _GlobalHeadroomGain
+22    	 0000					.extern _GlobalLimiterThreshold
+23    	 0000					.extern _ModeFlag
+24    	 0000					.extern _Minus_6DB
+25    	 0000					.extern _Minus_2DB
+26    	 0000					.extern _ASMDegree
+27    	 0000					.extern _ASMGain
+28    							
+29    						 	.code_ovly 
+29     >> start of macro: .code_ovly
+1+    									seg_single , "CODE_OVLY", CODE
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_CODE_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "CODE_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_CODE_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .code_ovly
+30    						 	
+31    	 0000				_gainProcessing:
+32    						
+33    																	#i0 is a pointer to inL
+34    																	#i1 is a pointer to OutL
+35    	 0000	 84050010		i4 = i0 + (_RIGHT_CH * _BLOCK_SIZE)		#i4 is a pointer to inR
+36    	 0001	 85150010		i5 = i1 + (_RIGHT_CH * _BLOCK_SIZE)		#i5 is a pointer to OutR
+37    	 0002	 86150020		i6 = i1 + (_CENTER_CH * _BLOCK_SIZE)	#i6 is a pointer to OutC
+38    	 0003	 82150030		i2 = i1 + (_LEFT_S_CH * _BLOCK_SIZE)	#i2 is a pointer to OutLs
+39    	 0004	 83150040		i3 = i1 + (_RIGHT_S_CH * _BLOCK_SIZE)   #i3 is a pointer to OutRs
+40    							
+41    	 0005	 83040000		x3 = xmem[_GlobalInputGain]				#get the GlobalInputGain
+42    	 0006	 87040000		y3 = xmem[_GlobalHeadroomGain]			#get the GlobalHeadroomGain
+43    						 
+44    	 0007	 81000032		do(_BLOCK_SIZE) ,>loop
+45    							
+46    							#1. INPUTGAIN FOR L AND R
+47    	 0008	 80940010	 	x0 = ymem[i0]; i0 += 1					#get the inL and inR values
+48    	 0009	 81940014	 	x1 = ymem[i4]; i4 += 1
+49    						 	
+50    	 000A	 00002180	 	a0 = x0 * x3		
+51    	 000B	 000021A1	 	a1 = x1 * x3
+52    						 	
+53    						 	#4. INVERTER FOR Ls AND Rs
+54    							
+55    	 000C	 80880034		call functionInverter
+56    						 	
+57    						 	#2. ADD L AND R TO C
+58    	 000D	 00004408	 	a0 = a0 + a1
+59    						 	
+60    	 000E	 8C040000	 	b0 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+61    	 000F	 00004860	 	if(b0 < a0) a0 = b0						#saturation
+62    	 0010	 00004C84	 	b0 = -b0
+63    	 0011	 00004820	 	if(b0 > a0) a0 = b0 
+64    						
+65    							#3. HEADROOMGAIN FOR C 
+66    	 0012	 48407FFF		x0 = a0
+67    	 0013	 00002464		b0 = x0 * y3
+68    							
+69    	 0014	 8CD40016		ymem[i6] = b0; i6 += 1					#(END FOR C)
+70    							
+71    							#5. -6DB FOR L AND R 
+72    	 0015	 4C407FFF		x0 = b0 
+73    	 0016	 84040000		y0 = xmem[_Minus_6DB]					#get the -6DB
+74    							
+75    	 0017	 00002404		b0 = x0 * y0
+76    							
+77    	 0018	 8CD40001	 	ymem[i1] = b0							#(END FOR L)
+78    	 0019	 8CD40005	 	ymem[i5] = b0							#(END FOR R)
+79    						 	
+80    						 	#6. -2DB FOR Ls AND Rs
+81    						 	
+82    	 001A	 80940002	 	x0 = ymem[i2]
+83    	 001B	 81940003	 	x1 = ymem[i3]
+84    	 001C	 84040000	 	y0 = xmem[_Minus_2DB]					#get the -2DB
+85    						 	
+86    	 001D	 00002400	 	a0 = x0 * y0
+87    	 001E	 00002481	 	a1 = x1 * y0
+88    						 	
+89    						 	#7. ADD L AND R TO Ls AND Rs
+90    						 	
+91    	 001F	 00004420	 	a0 = a0 + b0
+92    	 0020	 000044A1	 	a1 = a1 + b0
+93    						 	
+94    	 0021	 8C040000	 	b0 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+95    	 0022	 00004860	 	if(b0 < a0) a0 = b0						#saturation
+96    	 0023	 00004C84	 	b0 = -b0
+97    	 0024	 00004820	 	if(b0 > a0) a0 = b0
+98    						 	
+99    	 0025	 88D40012	 	ymem[i2] = a0; i2 += 1					#(END FOR Ls)
+100   						 	
+101   	 0026	 8D040000	 	b1 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold 
+102   	 0027	 00004869	 	if(b1 < a1) a1 = b1						#saturation
+103   	 0028	 00004C8D	 	b1 = -b1
+104   	 0029	 00004829	 	if(b1 > a1) a1 = b1
+105   						 	
+106   	 002A	 89D40013	 	ymem[i3] = a1; i3 += 1					#(END FOR Rs)
+107   						 	
+108   	 002B	 8C040000	 	b0 = xmem[_ModeFlag]
+109   	 002C	 00004DC5		b1 = 0
+110   	 002D	 00004F0C	 	b0 - b1
+111   	 002E	 86080031	 	if (b == 0) jmp>notMode0_2_0			#check to see if 0_2_0
+112   	 002F	 88D40001	 		ymem[i1] = a0
+113   	 0030	 89D40005	 		ymem[i5] = a1
+114   						 		
+115   	 0031				%notMode0_2_0:
+116   						
+117   	 0031	 02097FFF	 	i1 += 1
+118   						 	
+119   	 0032	 020D7FFF	%loop: i5 += 1
+120   						 
+121   	 0033	 81880000		ret
+122   							
+123   	 0034				functionInverter:
+124   						
+125   	 0034	 48447FFF		y0 = a0   								#inL is in a0
+126   	 0035	 49457FFF		y1 = a1 								#inR is in a1
+127   							
+128   	 0036	 80040000		x0 = xmem[_ASMDegree]
+129   	 0037	 81040000		x1 = xmem[_ASMGain]
+130   	 0038	 404B7FFF		a3 = x0									
+131   						
+132   	 0039	 9A7A8000		a2h = 0x8000							#get dry
+133   	 003A	 0000455A		a2 = a2 - a3
+134   	 003B	 4A467FFF		y2 = a2
+135   							
+136   	 003C	 00002705		b1 = y0 * y2							#VALUE OF L
+137   	 003D	 0000241D		b1 -= y0 * x0
+138   	 003E	 4D427FFF		x2 = b1
+139   							
+140   	 003F	 000020C7		b3 = x2 * x1
+141   							
+142   	 0040	 8B040000		a3 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+143   							
+144   	 0041	 0000487F	 	if(a3 < b3) b3 = a3						#saturation
+145   	 0042	 00004C9B	 	a3 = -a3
+146   	 0043	 0000483F	 	if(a3 > b3) b3 = a3		
+147   						
+148   	 0044	 8FD40002		ymem[i2] = b3	
+149   							
+150   	 0045	 00002725		b1 = y1 * y2							#VALUE OF R
+151   	 0046	 0000243D		b1 -= y1 * x0
+152   	 0047	 4D427FFF		x2 = b1
+153   							
+154   	 0048	 000020C7		b3 = x2 * x1
+155   							
+156   	 0049	 0000483F		if(a3 > b3) b3 = a3						#saturation
+157   	 004A	 00004C9B	 	a3 = -a3
+158   	 004B	 0000487F	 	if(a3 < b3) b3 = a3	
+159   						
+160   	 004C	 8FD40003		ymem[i3] = b3
+161   						
+162   	 004D	 81880000		ret
+163   						 
+164   						 	.endif
+				 SYMBOL TABLE 
+
+    Name                                                                                    Type                  Value 
+
+_ASMDegree                                                                      					 External   
+_ASMGain                                                                        					 External   
+_BLOCK_SIZE                                                                     					 Number				          16 (10H)
+_CENTER_CH                                                                      					 Number				          2 (2H)
+_COMMON_INC_PATH_                                                               					 Define                 "C:/CirrusDSP/crystal32/common/inc/"
+_DSP_                                                                           					 Define                 "a"
+_GAINPROC_ASM                                                                   			  Unused Relocatable        __INIT:0000H
+_GlobalHeadroomGain                                                             					 External   
+_GlobalInputGain                                                                					 External   
+_GlobalLimiterThreshold                                                         					 External   
+_LEFT_CH                                                                        			  Unused Number				     0 (0H)
+_LEFT_S_CH                                                                      					 Number				          3 (3H)
+_LOCAL_INC_PATH_                                                                					 Define                 "inc/"
+_LOCAL_SRC_PATH_                                                                					 Define                 "src/"
+_MUI_VERSION_                                                                   					 Define                 "020000"
+_Minus_2DB                                                                      					 External   
+_Minus_6DB                                                                      					 External   
+_ModeFlag                                                                       					 External   
+_OVLY_                                                                          					 Define                 "standalone"
+_OVLY_REVISION_                                                                 					 Define                 "020000"
+_RIGHT_CH                                                                       					 Number				          1 (1H)
+_RIGHT_S_CH                                                                     					 Number				          4 (4H)
+_ROUTER_INC_PATH_                                                               					 Define                 "rom_inc/"
+_SLOT_                                                                          					 Define                 "0"
+_TARGET_FAMILY_                                                                 					 Define                 "crystal32"
+_TOOLS_VERSION_                                                                 					 Define                 "0x0701"
+_VERSION_                                                                       					 Define                 "00"
+__CASM_VER__                                                                    			  Unused Variable		        0 (701H)
+_degree                                                                         			  Unused Float		          2 
+_gainProcessing                                                                 			  Public Relocatable       GainProcessing_GEN_0000:0000H
+functionInverter                                                                			         Relocatable         GainProcessing_GEN_0000:0034H
+
+	       SEGMENTS:
+
+Size			  Name										 Class
+0000H	 __INIT                                  			 CODE                                    
+004EH	 GainProcessing_GEN_0000                 			 CODE_OVLY                               

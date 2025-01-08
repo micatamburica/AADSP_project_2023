@@ -1,0 +1,287 @@
+1     						
+2     	 0000				_GAINPROC_ASM
+3     						
+4     						.if defined (_GAINPROC_ASM)
+5     						
+6     						// Block size 
+7     	 0010				_BLOCK_SIZE .equ 16
+8     						
+9     						// Channel IDs. 
+10    	 0000				_LEFT_CH .equ 0
+11    	 0001				_RIGHT_CH .equ 1
+12    	 0002				_CENTER_CH .equ 2
+13    	 0003				_LEFT_S_CH .equ 3
+14    	 0004				_RIGHT_S_CH .equ 4
+15    						
+16    	 0000				_degree .equ 2.0
+17    						
+18    	 0000					.public _gainProcessing
+19    							
+20    	 0000					.extern _GlobalInputGain
+21    	 0000					.extern _GlobalHeadroomGain
+22    	 0000					.extern _GlobalLimiterThreshold
+23    	 0000					.extern _ModeFlag
+24    	 0000					.extern _Minus_6DB
+25    	 0000					.extern _Minus_2DB
+26    	 0000					.extern _ASMDegree
+27    	 0000					.extern _ASMGain
+28    							
+29    						 	.code_ovly 
+29     >> start of macro: .code_ovly
+1+    									seg_single , "CODE_OVLY", CODE
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_CODE_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "CODE_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_CODE_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .code_ovly
+30    						 	
+31    	 0000				_gainProcessing:
+32    						
+33    																	#i0 is a pointer to inL
+34    																	#i1 is a pointer to OutL
+35    	 0000	 84050010		i4 = i0 + (_RIGHT_CH * _BLOCK_SIZE)		#i4 is a pointer to inR
+36    	 0001	 85150010		i5 = i1 + (_RIGHT_CH * _BLOCK_SIZE)		#i5 is a pointer to OutR
+37    	 0002	 86150020		i6 = i1 + (_CENTER_CH * _BLOCK_SIZE)	#i6 is a pointer to OutC
+38    	 0003	 82150030		i2 = i1 + (_LEFT_S_CH * _BLOCK_SIZE)	#i2 is a pointer to OutLs
+39    	 0004	 83150040		i3 = i1 + (_RIGHT_S_CH * _BLOCK_SIZE)   #i3 is a pointer to OutRs
+40    						 
+41    	 0005	 8100004F		do(_BLOCK_SIZE) ,>loop
+42    							
+43    							#1. INPUTGAIN FOR L AND R
+44    	 0006	 80940000	 	x0 = ymem[i0]							#get the inL and inR values
+45    	 0007	 81940004	 	x1 = ymem[i4]
+46    	 0008	 84040000	 	y0 = xmem[_GlobalInputGain]				#get the GlobalInputGain
+47    						 	
+48    	 0009	 00002400	 	a0 = x0 * y0		
+49    	 000A	 00002481	 	a1 = x1 * y0
+50    						 	
+51    						 	#2. ADD L AND R TO C
+52    	 000B	 00004DC4	 	b0 = 0
+53    	 000C	 00004424	 	b0 = b0 + a0
+54    	 000D	 0000442C	 	b0 = b0 + a1
+55    	 000E	 8D040000	 	b1 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+56    						 	
+57    	 000F	 00004F0C	 	b0 - b1
+58    	 0010	 86880013	 	if (b < 0) jmp>checkIfMinusC			#checks if the value > threshold, otherwise
+59    	 0011	 4D4C7FFF	 		b0 = b1
+60    	 0012	 80080017	 		jmp>saturatedC
+61    						 		
+62    	 0013				%checkIfMinusC:								#checks if the value < -threshold
+63    	 0013	 00004C8D		b1 = -b1
+64    	 0014	 00004F0C		b0 - b1
+65    	 0015	 86C80017		if (b >= 0) jmp>saturatedC
+66    	 0016	 4D4C7FFF			b0 = b1
+67    								
+68    	 0017				%saturatedC:								#end of saturation
+69    						
+70    							#3. HEADROOMGAIN FOR C 
+71    	 0017	 4C407FFF		x0 = b0
+72    	 0018	 84040000		y0 = xmem[_GlobalHeadroomGain]			#get the GlobalHeadroomGain
+73    	 0019	 00002404		b0 = x0 * y0
+74    							
+75    	 001A	 8CD40006		ymem[i6] = b0							#(END FOR C)
+76    							
+77    							#4. INVERTER FOR Ls AND Rs
+78    							
+79    	 001B	 80880051		call functionInverter
+80    							
+81    							#5. -6DB FOR L AND R 
+82    	 001C	 4C407FFF		x0 = b0 
+83    	 001D	 84040000		y0 = xmem[_Minus_6DB]					#get the -6DB
+84    							
+85    	 001E	 00002404		b0 = x0 * y0
+86    							
+87    	 001F	 8CD40001	 	ymem[i1] = b0							#(END FOR L)
+88    	 0020	 8CD40005	 	ymem[i5] = b0							#(END FOR R)
+89    						 	
+90    						 	#6. -2DB FOR Ls AND Rs
+91    						 	
+92    	 0021	 80940002	 	x0 = ymem[i2]
+93    	 0022	 81940003	 	x1 = ymem[i3]
+94    	 0023	 84040000	 	y0 = xmem[_Minus_2DB]					#get the -2DB
+95    						 	
+96    	 0024	 00002400	 	a0 = x0 * y0
+97    	 0025	 00002481	 	a1 = x1 * y0
+98    						 	
+99    						 	#7. ADD L AND R TO Ls AND Rs
+100   						 	
+101   	 0026	 00004DC5	 	b1 = 0
+102   	 0027	 000044A5	 	b1 = b1 + a0
+103   	 0028	 00004485	 	b1 = b1 + b0
+104   						 	
+105   	 0029	 8E040000	 	b2 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+106   						 	
+107   	 002A	 00004F15	 	b1 - b2
+108   	 002B	 8688002E	 	if (b < 0) jmp>checkIfMinusLs			#checks if the value > threshold, otherwise
+109   	 002C	 4E4D7FFF	 		b1 = b2
+110   	 002D	 80080032	 		jmp>saturatedLs
+111   						 		
+112   	 002E				%checkIfMinusLs:							#checks if the value < -threshold
+113   	 002E	 00004C96		b2 = -b2
+114   	 002F	 00004F15		b1 - b2
+115   	 0030	 86C80032		if (b >= 0) jmp>saturatedLs
+116   	 0031	 4E4D7FFF			b1 = b2
+117   								
+118   	 0032				%saturatedLs:								#end of saturation
+119   						 	
+120   	 0032	 8DD40002	 	ymem[i2] = b1							#(END FOR Ls)
+121   						 	
+122   	 0033	 00004DC5	 	b1 = 0
+123   	 0034	 000044AD	 	b1 = b1 + a1
+124   	 0035	 00004485	 	b1 = b1 + b0
+125   						 	
+126   	 0036	 8E040000	 	b2 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+127   						 	
+128   	 0037	 00004F15	 	b1 - b2
+129   	 0038	 8688003B	 	if (b < 0) jmp>checkIfMinusRs			#checks if the value > threshold, otherwise
+130   	 0039	 4E4D7FFF	 		b1 = b2
+131   	 003A	 8008003F	 		jmp>saturatedRs
+132   						 		
+133   	 003B				%checkIfMinusRs:							#checks if the value < -threshold
+134   	 003B	 00004C96		b2 = -b2
+135   	 003C	 00004F15		b1 - b2
+136   	 003D	 86C8003F		if (b >= 0) jmp>saturatedRs
+137   	 003E	 4E4D7FFF			b1 = b2
+138   								
+139   	 003F				%saturatedRs:								#end of saturation
+140   						 	
+141   	 003F	 8DD40003	 	ymem[i3] = b1							#(END FOR Rs)
+142   						 	
+143   	 0040	 88040000	 	a0 = xmem[_ModeFlag]
+144   	 0041	 00004DC1		a1 = 0
+145   	 0042	 00004F08	 	a0 - a1
+146   	 0043	 84080048	 	if (a == 0) jmp>notMode0_2_0			#check to see if 0_2_0
+147   	 0044	 8C940002	 		b0 = ymem[i2]
+148   	 0045	 8D940003	 		b1 = ymem[i3]
+149   	 0046	 8CD40001	 		ymem[i1] = b0
+150   	 0047	 8DD40005	 		ymem[i5] = b1
+151   						 		
+152   	 0048				%notMode0_2_0:
+153   						
+154   	 0048	 02087FFF	 	i0 += 1
+155   	 0049	 02097FFF	 	i1 += 1
+156   	 004A	 020C7FFF	 	i4 += 1
+157   	 004B	 020D7FFF	 	i5 += 1
+158   	 004C	 020E7FFF	 	i6 += 1
+159   	 004D	 020A7FFF	 	i2 += 1
+160   	 004E	 020B7FFF	 	i3 += 1
+161   						 
+162   	 004F	 00007FFF	%loop: nop;
+163   						 
+164   	 0050	 81880000		ret
+165   							
+166   	 0051				functionInverter:
+167   						
+168   	 0051	 48447FFF		y0 = a0									#inL is in a0
+169   	 0052	 49457FFF		y1 = a1									#inR is in a1
+170   						
+171   	 0053	 88040000		a0 = xmem[_ASMDegree]					#get degree
+172   	 0054	 80040000		x0 = xmem[_ASMDegree ] 
+173   	 0055	 81040000		x1 = xmem[_ASMGain]
+174   						
+175   	 0056	 9A7A8000		a2h = 0x8000							#get dry
+176   	 0057	 00007FFF		nop 
+177   	 0058	 00007FFF		nop
+178   	 0059	 00007FFF		nop
+179   	 005A	 00004542		a2 = a2 - a0
+180   	 005B	 4A467FFF		y2 = a2
+181   							
+182   	 005C	 00002705		b1 = y0 * y2							#VALUE OF L
+183   	 005D	 00002406		b2 = y0 * x0
+184   	 005E	 000044D5		b1 = b1 - b2
+185   	 005F	 4D427FFF		x2 = b1
+186   							
+187   	 0060	 000020C5		b1 = x2 * x1
+188   							
+189   	 0061	 8E040000		b2 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+190   						 	
+191   	 0062	 00004F15	 	b1 - b2
+192   	 0063	 86880066	 	if (b < 0) jmp>checkIfMinusL			#checks if the value > threshold, otherwise
+193   	 0064	 4E4D7FFF	 		b1 = b2
+194   	 0065	 8008006A	 		jmp>saturatedL
+195   						 		
+196   	 0066				%checkIfMinusL:								#checks if the value < -threshold
+197   	 0066	 00004C96		b2 = -b2
+198   	 0067	 00004F15		b1 - b2
+199   	 0068	 86C8006A		if (b >= 0) jmp>saturatedL
+200   	 0069	 4E4D7FFF			b1 = b2
+201   								
+202   	 006A				%saturatedL:		
+203   						
+204   	 006A	 8DD40002		ymem[i2] = b1	
+205   							
+206   	 006B	 00002725		b1 = y1 * y2							#VALUE OF R
+207   	 006C	 00002426		b2 = y1 * x0
+208   	 006D	 000044D5		b1 = b1 - b2
+209   	 006E	 4D427FFF		x2 = b1
+210   							
+211   	 006F	 000020C5		b1 = x2 * x1
+212   							
+213   	 0070	 8E040000		b2 = xmem[_GlobalLimiterThreshold]		#get the GlobalLimiterThreshold
+214   						 	
+215   	 0071	 00004F15	 	b1 - b2
+216   	 0072	 86880075	 	if (b < 0) jmp>checkIfMinusR			#checks if the value > threshold, otherwise
+217   	 0073	 4E4D7FFF	 		b1 = b2
+218   	 0074	 80080079	 		jmp>saturatedR
+219   						 		
+220   	 0075				%checkIfMinusR:								#checks if the value < -threshold
+221   	 0075	 00004C96		b2 = -b2
+222   	 0076	 00004F15		b1 - b2
+223   	 0077	 86C80079		if (b >= 0) jmp>saturatedR
+224   	 0078	 4E4D7FFF			b1 = b2
+225   								
+226   	 0079				%saturatedR:		
+227   						
+228   	 0079	 8DD40003		ymem[i3] = b1
+229   						
+230   	 007A	 81880000		ret
+231   						 
+232   						 	.endif
+				 SYMBOL TABLE 
+
+    Name                                                                                    Type                  Value 
+
+_ASMDegree                                                                      					 External   
+_ASMGain                                                                        					 External   
+_BLOCK_SIZE                                                                     					 Number				          16 (10H)
+_CENTER_CH                                                                      					 Number				          2 (2H)
+_COMMON_INC_PATH_                                                               					 Define                 "C:/CirrusDSP/crystal32/common/inc/"
+_DSP_                                                                           					 Define                 "a"
+_GAINPROC_ASM                                                                   			  Unused Relocatable        __INIT:0000H
+_GlobalHeadroomGain                                                             					 External   
+_GlobalInputGain                                                                					 External   
+_GlobalLimiterThreshold                                                         					 External   
+_LEFT_CH                                                                        			  Unused Number				     0 (0H)
+_LEFT_S_CH                                                                      					 Number				          3 (3H)
+_LOCAL_INC_PATH_                                                                					 Define                 "inc/"
+_LOCAL_SRC_PATH_                                                                					 Define                 "src/"
+_MUI_VERSION_                                                                   					 Define                 "020000"
+_Minus_2DB                                                                      					 External   
+_Minus_6DB                                                                      					 External   
+_ModeFlag                                                                       					 External   
+_OVLY_                                                                          					 Define                 "standalone"
+_OVLY_REVISION_                                                                 					 Define                 "020000"
+_RIGHT_CH                                                                       					 Number				          1 (1H)
+_RIGHT_S_CH                                                                     					 Number				          4 (4H)
+_ROUTER_INC_PATH_                                                               					 Define                 "rom_inc/"
+_SLOT_                                                                          					 Define                 "0"
+_TARGET_FAMILY_                                                                 					 Define                 "crystal32"
+_TOOLS_VERSION_                                                                 					 Define                 "0x0701"
+_VERSION_                                                                       					 Define                 "00"
+__CASM_VER__                                                                    			  Unused Variable		        0 (701H)
+_degree                                                                         			  Unused Float		          2 
+_gainProcessing                                                                 			  Public Relocatable       GainProcessing_GEN_0000:0000H
+functionInverter                                                                			         Relocatable         GainProcessing_GEN_0000:0051H
+
+	       SEGMENTS:
+
+Size			  Name										 Class
+0000H	 __INIT                                  			 CODE                                    
+007BH	 GainProcessing_GEN_0000                 			 CODE_OVLY                               

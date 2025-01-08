@@ -1,0 +1,1378 @@
+1     	 0000					.extern ___TIMER0_COUNT
+2     	 0000					.extern ___TIMER1_COUNT
+3     	 0000					.extern ___TIMER1_ENABLE
+4     	 0000					.public _audio_invert_init
+5     	 0000					.extern _cl_get_cycle_count
+6     	 0000					.extern _cl_wavread_bits_per_sample
+7     	 0000					.extern _cl_wavread_close
+8     	 0000					.extern _cl_wavread_frame_rate
+9     	 0000					.extern _cl_wavread_getnchannels
+10    	 0000					.extern _cl_wavread_number_of_frames
+11    	 0000					.extern _cl_wavread_open
+12    	 0000					.extern _cl_wavread_recvsample
+13    	 0000					.extern _cl_wavwrite_close
+14    	 0000					.extern _cl_wavwrite_open
+15    	 0000					.extern _cl_wavwrite_sendsample
+16    	 0000					.public _gainProcessing
+17    	 0000					.public _initGainProcessing
+18    	 0000					.public _main
+19    	 0000					.extern _printf
+20    	 0000					.public _saturation
+21    	 0000					.extern _strcmp
+22    	 0000					.extern _strcpy
+23    	 0000					.extern __div
+24    							.xdata_ovly
+24     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+25    						S_GlobalInverterData_0	.struct
+26    						_degree	.dw (0x0)
+27    						_gain	.dw (0x0)
+28    							.endstruct
+29    						
+30    							.xdata_ovly
+30     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+31    	 0000				_GlobalHeadroomGain
+32    	 0000					.bss (0x1)
+33    							.xdata_ovly
+33     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+34    	 0000				_GlobalInputGain
+35    	 0000					.bss (0x1)
+36    							.xdata_ovly
+36     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+37    	 0000				(null)	 0000	 00000000	 
+37    	 0001				(null)	 0001	 00000000	 
+37    						_GlobalInverterData S_GlobalInverterData_0
+38    						
+39    							.xdata_ovly
+39     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+40    	 0000				_GlobalLimiterThreshold
+41    	 0000					.dw  (0x7fdf3b64)
+	 0000	 7FDF3B64	 
+42    							.xdata_ovly
+42     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+43    	 0000				_OutputModeFlag
+44    	 0000					.dw  (0x32)
+	 0000	 00000032	 
+45    	 0001					.dw  (0x5f)
+	 0001	 0000005F	 
+46    	 0002					.dw  (0x30)
+	 0002	 00000030	 
+47    	 0003					.dw  (0x5f)
+	 0003	 0000005F	 
+48    	 0004					.dw  (0x30)
+	 0004	 00000030	 
+49    	 0005					.dw  (0x0)
+	 0005	 00000000	 
+50    							.xdata_ovly
+50     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+51    	 0000				__extractedConst_0_1
+52    	 0000					.dw  (0x7fffffff)
+	 0000	 7FFFFFFF	 
+53    							.xdata_ovly
+53     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+54    	 0000				__extractedConst_1_3
+55    	 0000					.dw  (0x4026e547)
+	 0000	 4026E547	 
+56    							.xdata_ovly
+56     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+57    	 0000				__extractedConst_2_2
+58    	 0000					.dw  (0x65ac8a37)
+	 0000	 65AC8A37	 
+59    							.xdata_ovly
+59     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+60    	 0000				__extractedConst_3_2
+61    	 0000					.dw  (0x66666666)
+	 0000	 66666666	 
+62    							.xdata_ovly
+62     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+63    	 0000				__extractedConst_4_1
+64    	 0000					.dw  (0x5a9df97b)
+	 0000	 5A9DF97B	 
+65    							.xdata_ovly
+65     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+66    	 0000				__extractedConst_5_2
+67    	 0000					.dw  (0x7fdf3b64)
+	 0000	 7FDF3B64	 
+68    							.xdata_ovly
+68     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+69    	 0000				__extractedConst_6_2
+70    	 0000					.dw  (0x8020c49c)
+	 0000	 8020C49C	 
+71    							.xdata_ovly
+71     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+72    	 0000				_sampleBuffer
+73    	 0000					.bss (0x80)
+74    							.xdata_ovly
+74     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+75    	 0000				_string_const_0
+76    	 0000					.dw  (0x30)
+	 0000	 00000030	 
+77    	 0001					.dw  (0x5f)
+	 0001	 0000005F	 
+78    	 0002					.dw  (0x32)
+	 0002	 00000032	 
+79    	 0003					.dw  (0x5f)
+	 0003	 0000005F	 
+80    	 0004					.dw  (0x30)
+	 0004	 00000030	 
+81    	 0005					.dw  (0x0)
+	 0005	 00000000	 
+82    							.xdata_ovly
+82     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+83    	 0000				_string_const_1
+84    	 0000					.dw  (0x30)
+	 0000	 00000030	 
+85    	 0001					.dw  (0x0)
+	 0001	 00000000	 
+86    							.xdata_ovly
+86     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+87    	 0000				_string_const_2
+88    	 0000					.dw  (0x30)
+	 0000	 00000030	 
+89    	 0001					.dw  (0x2e)
+	 0001	 0000002E	 
+90    	 0002					.dw  (0x39)
+	 0002	 00000039	 
+91    	 0003					.dw  (0x39)
+	 0003	 00000039	 
+92    	 0004					.dw  (0x39)
+	 0004	 00000039	 
+93    	 0005					.dw  (0x0)
+	 0005	 00000000	 
+94    							.xdata_ovly
+94     >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+95    	 0000				_string_const_3
+96    	 0000					.dw  (0x2d)
+	 0000	 0000002D	 
+97    	 0001					.dw  (0x30)
+	 0001	 00000030	 
+98    	 0002					.dw  (0x2e)
+	 0002	 0000002E	 
+99    	 0003					.dw  (0x39)
+	 0003	 00000039	 
+100   	 0004					.dw  (0x39)
+	 0004	 00000039	 
+101   	 0005					.dw  (0x39)
+	 0005	 00000039	 
+102   	 0006					.dw  (0x0)
+	 0006	 00000000	 
+103   							.xdata_ovly
+103    >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+104   	 0000				_string_const_4
+105   	 0000					.dw  (0x30)
+	 0000	 00000030	 
+106   	 0001					.dw  (0x2e)
+	 0001	 0000002E	 
+107   	 0002					.dw  (0x39)
+	 0002	 00000039	 
+108   	 0003					.dw  (0x39)
+	 0003	 00000039	 
+109   	 0004					.dw  (0x39)
+	 0004	 00000039	 
+110   	 0005					.dw  (0x0)
+	 0005	 00000000	 
+111   							.xdata_ovly
+111    >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+112   	 0000				_string_const_5
+113   	 0000					.dw  (0x2d)
+	 0000	 0000002D	 
+114   	 0001					.dw  (0x30)
+	 0001	 00000030	 
+115   	 0002					.dw  (0x2e)
+	 0002	 0000002E	 
+116   	 0003					.dw  (0x39)
+	 0003	 00000039	 
+117   	 0004					.dw  (0x39)
+	 0004	 00000039	 
+118   	 0005					.dw  (0x39)
+	 0005	 00000039	 
+119   	 0006					.dw  (0x0)
+	 0006	 00000000	 
+120   							.xdata_ovly
+120    >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+121   	 0000				_string_const_6
+122   	 0000					.dw  (0x45)
+	 0000	 00000045	 
+123   	 0001					.dw  (0x72)
+	 0001	 00000072	 
+124   	 0002					.dw  (0x72)
+	 0002	 00000072	 
+125   	 0003					.dw  (0x6f)
+	 0003	 0000006F	 
+126   	 0004					.dw  (0x72)
+	 0004	 00000072	 
+127   	 0005					.dw  (0x3a)
+	 0005	 0000003A	 
+128   	 0006					.dw  (0x20)
+	 0006	 00000020	 
+129   	 0007					.dw  (0x43)
+	 0007	 00000043	 
+130   	 0008					.dw  (0x6f)
+	 0008	 0000006F	 
+131   	 0009					.dw  (0x75)
+	 0009	 00000075	 
+132   	 000A					.dw  (0x6c)
+	 000A	 0000006C	 
+133   	 000B					.dw  (0x64)
+	 000B	 00000064	 
+134   	 000C					.dw  (0x20)
+	 000C	 00000020	 
+135   	 000D					.dw  (0x6e)
+	 000D	 0000006E	 
+136   	 000E					.dw  (0x6f)
+	 000E	 0000006F	 
+137   	 000F					.dw  (0x74)
+	 000F	 00000074	 
+138   	 0010					.dw  (0x20)
+	 0010	 00000020	 
+139   	 0011					.dw  (0x6f)
+	 0011	 0000006F	 
+140   	 0012					.dw  (0x70)
+	 0012	 00000070	 
+141   	 0013					.dw  (0x65)
+	 0013	 00000065	 
+142   	 0014					.dw  (0x6e)
+	 0014	 0000006E	 
+143   	 0015					.dw  (0x20)
+	 0015	 00000020	 
+144   	 0016					.dw  (0x77)
+	 0016	 00000077	 
+145   	 0017					.dw  (0x61)
+	 0017	 00000061	 
+146   	 0018					.dw  (0x76)
+	 0018	 00000076	 
+147   	 0019					.dw  (0x65)
+	 0019	 00000065	 
+148   	 001A					.dw  (0x66)
+	 001A	 00000066	 
+149   	 001B					.dw  (0x69)
+	 001B	 00000069	 
+150   	 001C					.dw  (0x6c)
+	 001C	 0000006C	 
+151   	 001D					.dw  (0x65)
+	 001D	 00000065	 
+152   	 001E					.dw  (0x2e)
+	 001E	 0000002E	 
+153   	 001F					.dw  (0xa)
+	 001F	 0000000A	 
+154   	 0020					.dw  (0x0)
+	 0020	 00000000	 
+155   							.xdata_ovly
+155    >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+156   	 0000				_string_const_7
+157   	 0000					.dw  (0x33)
+	 0000	 00000033	 
+158   	 0001					.dw  (0x5f)
+	 0001	 0000005F	 
+159   	 0002					.dw  (0x32)
+	 0002	 00000032	 
+160   	 0003					.dw  (0x5f)
+	 0003	 0000005F	 
+161   	 0004					.dw  (0x30)
+	 0004	 00000030	 
+162   	 0005					.dw  (0x0)
+	 0005	 00000000	 
+163   							.xdata_ovly
+163    >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+164   	 0000				_string_const_8
+165   	 0000					.dw  (0x45)
+	 0000	 00000045	 
+166   	 0001					.dw  (0x72)
+	 0001	 00000072	 
+167   	 0002					.dw  (0x72)
+	 0002	 00000072	 
+168   	 0003					.dw  (0x6f)
+	 0003	 0000006F	 
+169   	 0004					.dw  (0x72)
+	 0004	 00000072	 
+170   	 0005					.dw  (0x3a)
+	 0005	 0000003A	 
+171   	 0006					.dw  (0x20)
+	 0006	 00000020	 
+172   	 0007					.dw  (0x43)
+	 0007	 00000043	 
+173   	 0008					.dw  (0x6f)
+	 0008	 0000006F	 
+174   	 0009					.dw  (0x75)
+	 0009	 00000075	 
+175   	 000A					.dw  (0x6c)
+	 000A	 0000006C	 
+176   	 000B					.dw  (0x64)
+	 000B	 00000064	 
+177   	 000C					.dw  (0x20)
+	 000C	 00000020	 
+178   	 000D					.dw  (0x6e)
+	 000D	 0000006E	 
+179   	 000E					.dw  (0x6f)
+	 000E	 0000006F	 
+180   	 000F					.dw  (0x74)
+	 000F	 00000074	 
+181   	 0010					.dw  (0x20)
+	 0010	 00000020	 
+182   	 0011					.dw  (0x6f)
+	 0011	 0000006F	 
+183   	 0012					.dw  (0x70)
+	 0012	 00000070	 
+184   	 0013					.dw  (0x65)
+	 0013	 00000065	 
+185   	 0014					.dw  (0x6e)
+	 0014	 0000006E	 
+186   	 0015					.dw  (0x20)
+	 0015	 00000020	 
+187   	 0016					.dw  (0x77)
+	 0016	 00000077	 
+188   	 0017					.dw  (0x61)
+	 0017	 00000061	 
+189   	 0018					.dw  (0x76)
+	 0018	 00000076	 
+190   	 0019					.dw  (0x65)
+	 0019	 00000065	 
+191   	 001A					.dw  (0x66)
+	 001A	 00000066	 
+192   	 001B					.dw  (0x69)
+	 001B	 00000069	 
+193   	 001C					.dw  (0x6c)
+	 001C	 0000006C	 
+194   	 001D					.dw  (0x65)
+	 001D	 00000065	 
+195   	 001E					.dw  (0x2e)
+	 001E	 0000002E	 
+196   	 001F					.dw  (0xa)
+	 001F	 0000000A	 
+197   	 0020					.dw  (0x0)
+	 0020	 00000000	 
+198   							.xdata_ovly
+198    >> start of macro: .xdata_ovly
+1+    									seg_single , "X_OVLY", X
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_X_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "X_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_X_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .xdata_ovly
+199   	 0000				_string_const_9
+200   	 0000					.dw  (0x4e)
+	 0000	 0000004E	 
+201   	 0001					.dw  (0x75)
+	 0001	 00000075	 
+202   	 0002					.dw  (0x6d)
+	 0002	 0000006D	 
+203   	 0003					.dw  (0x62)
+	 0003	 00000062	 
+204   	 0004					.dw  (0x65)
+	 0004	 00000065	 
+205   	 0005					.dw  (0x72)
+	 0005	 00000072	 
+206   	 0006					.dw  (0x20)
+	 0006	 00000020	 
+207   	 0007					.dw  (0x6f)
+	 0007	 0000006F	 
+208   	 0008					.dw  (0x66)
+	 0008	 00000066	 
+209   	 0009					.dw  (0x20)
+	 0009	 00000020	 
+210   	 000A					.dw  (0x63)
+	 000A	 00000063	 
+211   	 000B					.dw  (0x79)
+	 000B	 00000079	 
+212   	 000C					.dw  (0x63)
+	 000C	 00000063	 
+213   	 000D					.dw  (0x6c)
+	 000D	 0000006C	 
+214   	 000E					.dw  (0x65)
+	 000E	 00000065	 
+215   	 000F					.dw  (0x73)
+	 000F	 00000073	 
+216   	 0010					.dw  (0x3a)
+	 0010	 0000003A	 
+217   	 0011					.dw  (0x20)
+	 0011	 00000020	 
+218   	 0012					.dw  (0x25)
+	 0012	 00000025	 
+219   	 0013					.dw  (0x6c)
+	 0013	 0000006C	 
+220   	 0014					.dw  (0x6c)
+	 0014	 0000006C	 
+221   	 0015					.dw  (0x75)
+	 0015	 00000075	 
+222   	 0016					.dw  (0xa)
+	 0016	 0000000A	 
+223   	 0017					.dw  (0x0)
+	 0017	 00000000	 
+224   							.code_ovly
+224    >> start of macro: .code_ovly
+1+    									seg_single , "CODE_OVLY", CODE
+1+     >> start of macro: seg_single
+1+    						  .if ( "" != "" ) & defined( ___SegStart_CODE_ )
+2+    						    segment
+3+    						  .else
+4+    						    segment "CODE_OVLY"
+5+    							.if "" != ""
+6+    						___SegStart_CODE_
+7+    							.endif
+8+    						  .endif
+9+    							#RememberSegmentType
+10+    >> end of macro: seg_single
+2+     >> end of macro: .code_ovly
+225   						
+226   						
+227   						
+228   	 0000				_audio_invert_init:			/* LN: 44 | CYCLE: 0 | RULES: () */ 
+229   	 0000	 88040000		a0 = xmem[__extractedConst_3_2 + 0]			# LN: 46 | 
+230   	 0001	 98540010		xmem[i0] = a0h; i0 += 1			# LN: 46, 47 | 
+231   	 0002	 88040000		a0 = xmem[__extractedConst_3_2 + 0]			# LN: 47 | 
+232   	 0003	 98540000		xmem[i0] = a0h			# LN: 47 | 
+233   	 0004	 81880000		ret			# LN: 48 | 
+234   						
+235   						
+236   						
+237   	 0005				_gainProcessing:			/* LN: 62 | CYCLE: 0 | RULES: () */ 
+238   	 0005	 B2540017		xmem[i7] = i2; i7 += 1			# LN: 62, 62 | 
+239   	 0006	 B3540017		xmem[i7] = i3; i7 += 1			# LN: 62, 62 | 
+240   	 0007	 BA540017		xmem[i7] = i6; i7 += 1			# LN: 62, 62 | 
+241   	 0008	 87750004		i7 = i7 + (0x4)			# LN: 62 | 
+242   	 0009	 94750001		i4 = i7 - (0x1)			# LN: 65 | 
+243   	 000A	 B0540004		xmem[i4] = i0			# LN: 65 | 
+244   	 000B	 80050010		i0 = i0 + (0x10)			# LN: 66 | 
+245   	 000C	 94750002		i4 = i7 - (0x2)			# LN: 66 | 
+246   	 000D	 B0540004		xmem[i4] = i0			# LN: 66 | 
+247   	 000E	 B1090030		i0 = i1			# LN: 67 | 
+248   	 000F	 94750004		i4 = i7 - (0x4)			# LN: 67 | 
+249   	 0010	 B0540004		xmem[i4] = i0			# LN: 67 | 
+250   	 0011	 80150010		i0 = i1 + (0x10)			# LN: 68 | 
+251   	 0012	 94750003		i4 = i7 - (0x3)			# LN: 68 | 
+252   	 0013	 B0540004		xmem[i4] = i0			# LN: 68 | 
+253   	 0014	 80150020		i0 = i1 + (0x20)			# LN: 69 | 
+254   	 0015	 B0090032		i2 = i0			# LN: 69 | 
+255   	 0016	 80150030		i0 = i1 + (0x30)			# LN: 70 | 
+256   	 0017	 B0090033		i3 = i0			# LN: 70 | 
+257   	 0018	 80150040		i0 = i1 + (0x40)			# LN: 71 | 
+258   	 0019	 B009003A		i6 = i0			# LN: 71 | 
+259   	 001A	 8100008B		do (0x10), label_end_92			# LN: 74 | 
+260   	 001B				label_begin_92:			/* LN: 74 | CYCLE: 0 | RULES: () */ 
+261   	 001B	 00004DC0		a0 = 0			# LN: 77 | 
+262   	 001C	 98540002		xmem[i2] = a0h			# LN: 77 | 
+263   	 001D	 98540003		xmem[i3] = a0h			# LN: 78 | 
+264   	 001E	 98540006		xmem[i6] = a0h			# LN: 79 | 
+265   	 001F	 90750001		i0 = i7 - (0x1)			# LN: 82 | 
+266   	 0020	 B0140000		i0 = xmem[i0]			# LN: 82 | 
+267   	 0021	 80040000		x0 = xmem[_GlobalInputGain + 0]			# LN: 82 | 
+268   	 0022	 81140000		x1 = xmem[i0]			# LN: 82 | 
+269   	 0023	 90750001		i0 = i7 - (0x1)			# LN: 82 | 
+270   	 0024	 B0140000		i0 = xmem[i0]			# LN: 82 | 
+271   	 0025	 00002020		a0 = x1 * x0			# LN: 82 | 
+272   	 0026	 88540000		xmem[i0] = a0			# LN: 82 | 
+273   	 0027	 90750002		i0 = i7 - (0x2)			# LN: 83 | 
+274   	 0028	 B0140000		i0 = xmem[i0]			# LN: 83 | 
+275   	 0029	 80040000		x0 = xmem[_GlobalInputGain + 0]			# LN: 83 | 
+276   	 002A	 81140000		x1 = xmem[i0]			# LN: 83 | 
+277   	 002B	 90750002		i0 = i7 - (0x2)			# LN: 83 | 
+278   	 002C	 B0140000		i0 = xmem[i0]			# LN: 83 | 
+279   	 002D	 00002020		a0 = x1 * x0			# LN: 83 | 
+280   	 002E	 88540000		xmem[i0] = a0			# LN: 83 | 
+281   	 002F	 90750001		i0 = i7 - (0x1)			# LN: 86 | 
+282   	 0030	 91750002		i1 = i7 - (0x2)			# LN: 86 | 
+283   	 0031	 B1140001		i1 = xmem[i1]			# LN: 86 | 
+284   	 0032	 B0140000		i0 = xmem[i0]			# LN: 86 | 
+285   	 0033	 88140001		a0 = xmem[i1]			# LN: 86 | 
+286   	 0034	 89140000		a1 = xmem[i0]			# LN: 86 | 
+287   	 0035	 00004480		a0 = a1 + a0			# LN: 86 | 
+288   	 0036	 80880191		call (_saturation)			# LN: 86 | 
+289   	 0037	 98540002		xmem[i2] = a0h			# LN: 86 | 
+290   	 0038	 80140002		x0 = xmem[i2]			# LN: 89 | 
+291   	 0039	 81040000		x1 = xmem[_GlobalHeadroomGain + 0]			# LN: 89 | 
+292   	 003A	 00002080		a0 = x0 * x1			# LN: 89 | 
+293   	 003B	 88540002		xmem[i2] = a0			# LN: 89 | 
+294   	 003C	 90750001		i0 = i7 - (0x1)			# LN: 93 | 
+295   	 003D	 B0140000		i0 = xmem[i0]			# LN: 93 | 
+296   	 003E	 91750002		i1 = i7 - (0x2)			# LN: 94 | 
+297   	 003F	 88140000		a0 = xmem[i0]			# LN: 93 | 
+298   	 0040	 80880092		call (_gst_audio_invert_transform)			# LN: 93 | 
+299   	 0041	 98540003		xmem[i3] = a0h			# LN: 93 | 
+300   	 0042	 B0140001		i0 = xmem[i1]			# LN: 94 | 
+301   	 0043	 91750003		i1 = i7 - (0x3)			# LN: 99 | 
+302   	 0044	 88140000		a0 = xmem[i0]			# LN: 94 | 
+303   	 0045	 80880092		call (_gst_audio_invert_transform)			# LN: 94 | 
+304   	 0046	 98540006		xmem[i6] = a0h			# LN: 94 | 
+305   	 0047	 80140002		x0 = xmem[i2]			# LN: 98 | 
+306   	 0048	 81040000		x1 = xmem[__extractedConst_1_3 + 0]			# LN: 98 | 
+307   	 0049	 90750004		i0 = i7 - (0x4)			# LN: 98 | 
+308   	 004A	 B0140000		i0 = xmem[i0]			# LN: 98 | 
+309   	 004B	 00002080		a0 = x0 * x1			# LN: 98 | 
+310   	 004C	 88540000		xmem[i0] = a0			# LN: 98 | 
+311   	 004D	 80140002		x0 = xmem[i2]			# LN: 99 | 
+312   	 004E	 81040000		x1 = xmem[__extractedConst_1_3 + 0]			# LN: 99 | 
+313   	 004F	 B0140001		i0 = xmem[i1]			# LN: 99 | 
+314   	 0050	 00002080		a0 = x0 * x1			# LN: 99 | 
+315   	 0051	 88540000		xmem[i0] = a0			# LN: 99 | 
+316   	 0052	 80140003		x0 = xmem[i3]			# LN: 103 | 
+317   	 0053	 81040000		x1 = xmem[__extractedConst_2_2 + 0]			# LN: 103 | 
+318   	 0054	 00002080		a0 = x0 * x1			# LN: 103 | 
+319   	 0055	 88540003		xmem[i3] = a0			# LN: 103 | 
+320   	 0056	 80140006		x0 = xmem[i6]			# LN: 104 | 
+321   	 0057	 81040000		x1 = xmem[__extractedConst_2_2 + 0]			# LN: 104 | 
+322   	 0058	 00002080		a0 = x0 * x1			# LN: 104 | 
+323   	 0059	 88540006		xmem[i6] = a0			# LN: 104 | 
+324   	 005A	 90750004		i0 = i7 - (0x4)			# LN: 108 | 
+325   	 005B	 B0140000		i0 = xmem[i0]			# LN: 108 | 
+326   	 005C	 88140003		a0 = xmem[i3]			# LN: 108 | 
+327   	 005D	 89140000		a1 = xmem[i0]			# LN: 108 | 
+328   	 005E	 00004408		a0 = a0 + a1			# LN: 108 | 
+329   	 005F	 80880191		call (_saturation)			# LN: 108 | 
+330   	 0060	 98540003		xmem[i3] = a0h			# LN: 108 | 
+331   	 0061	 90750003		i0 = i7 - (0x3)			# LN: 109 | 
+332   	 0062	 B0140000		i0 = xmem[i0]			# LN: 109 | 
+333   	 0063	 88140006		a0 = xmem[i6]			# LN: 109 | 
+334   	 0064	 89140000		a1 = xmem[i0]			# LN: 109 | 
+335   	 0065	 00004408		a0 = a0 + a1			# LN: 109 | 
+336   	 0066	 A0050000		i0 = (0) + (_OutputModeFlag)			# LN: 112 | 
+337   	 0067	 80880191		call (_saturation)			# LN: 109 | 
+338   	 0068	 98540006		xmem[i6] = a0h			# LN: 109 | 
+339   	 0069	 A1050000		i1 = (0) + (_string_const_0)			# LN: 112 | 
+340   	 006A	 80880000		call (_strcmp)			# LN: 112 | 
+341   	 006B	 00004E80		a0 & a0			# LN: 112 | 
+342   	 006C	 84480075		if (a != 0) jmp (else_2)			# LN: 112 | 
+343   	 006D	 90750004		i0 = i7 - (0x4)			# LN: 114 | 
+344   	 006E	 B0140000		i0 = xmem[i0]			# LN: 114 | 
+345   	 006F	 88140003		a0 = xmem[i3]			# LN: 114 | 
+346   	 0070	 98540000		xmem[i0] = a0h			# LN: 114 | 
+347   	 0071	 90750003		i0 = i7 - (0x3)			# LN: 115 | 
+348   	 0072	 B0140000		i0 = xmem[i0]			# LN: 115 | 
+349   	 0073	 88140006		a0 = xmem[i6]			# LN: 115 | 
+350   	 0074	 98540000		xmem[i0] = a0h			# LN: 115 | 
+351   	 0075				endif_2:			/* LN: 112 | CYCLE: 0 | RULES: () */ 
+352   	 0075				else_2:			/* LN: 112 | CYCLE: 0 | RULES: () */ 
+353   	 0075	 90750001		i0 = i7 - (0x1)			# LN: 118 | 
+354   	 0076	 B0140000		i0 = xmem[i0]			# LN: 118 | 
+355   	 0077	 91750001		i1 = i7 - (0x1)			# LN: 118 | 
+356   	 0078	 02087FFF		i0 += 1			# LN: 118 | 
+357   	 0079	 B0540001		xmem[i1] = i0			# LN: 118 | 
+358   	 007A	 90750002		i0 = i7 - (0x2)			# LN: 119 | 
+359   	 007B	 B0140000		i0 = xmem[i0]			# LN: 119 | 
+360   	 007C	 91750002		i1 = i7 - (0x2)			# LN: 119 | 
+361   	 007D	 02087FFF		i0 += 1			# LN: 119 | 
+362   	 007E	 B0540001		xmem[i1] = i0			# LN: 119 | 
+363   	 007F	 90750003		i0 = i7 - (0x3)			# LN: 121 | 
+364   	 0080	 91750004		i1 = i7 - (0x4)			# LN: 120 | 
+365   	 0081	 B1140001		i1 = xmem[i1]			# LN: 120 | 
+366   	 0082	 B0140000		i0 = xmem[i0]			# LN: 121 | 
+367   	 0083	 02097FFF		i1 += 1			# LN: 120 | 
+368   	 0084	 94750004		i4 = i7 - (0x4)			# LN: 120 | 
+369   	 0085	 B1540004		xmem[i4] = i1			# LN: 120 | 
+370   	 0086	 02087FFF		i0 += 1			# LN: 121 | 
+371   	 0087	 91750003		i1 = i7 - (0x3)			# LN: 121 | 
+372   	 0088	 B0540001		xmem[i1] = i0			# LN: 121 | 
+373   	 0089	 020A7FFF		i2 += 1			# LN: 122 | 
+374   	 008A	 020B7FFF		i3 += 1			# LN: 123 | 
+375   	 008B				label_end_92:			# LN: 74 | CYCLE: 22 | RULES: ()
+376   	 008B	 020E7FFF		i6 += 1			# LN: 124 | 
+377   	 008C				for_end_0:			/* LN: 74 | CYCLE: 0 | RULES: () */ 
+378   	 008C	 97750004		i7 = i7 - (0x4)			# LN: 128 | 
+379   	 008D	 02177FFF		i7 -= 1			# LN: 128 | 
+380   	 008E	 BA140027		i6 = xmem[i7]; i7 -= 1			# LN: 128, 128 | 
+381   	 008F	 B3140027		i3 = xmem[i7]; i7 -= 1			# LN: 128, 128 | 
+382   	 0090	 B2140007		i2 = xmem[i7]			# LN: 128 | 
+383   	 0091	 81880000		ret			# LN: 128 | 
+384   						
+385   						
+386   						
+387   	 0092				_gst_audio_invert_transform:			/* LN: 50 | CYCLE: 0 | RULES: () */ 
+388   	 0092	 89040000		a1 = xmem[_GlobalInverterData + 0]			# LN: 52 | 
+389   	 0093	 8C040000		b0 = xmem[__extractedConst_0_1 + 0]			# LN: 52 | 
+390   	 0094	 005844E0		x0 = a0h; a0 = a1 - b0			# LN: 50, 52 | 
+391   	 0095	 00004C80		a0 =- a0			# LN: 52 | 
+392   	 0096	 01587FFF		x1 = a0h			# LN: 52 | 
+393   	 0097	 00002080		a0 = x0 * x1			# LN: 55 | 
+394   	 0098	 81040000		x1 = xmem[_GlobalInverterData + 0]			# LN: 55 | 
+395   	 0099	 00002098		a0 -= x0 * x1			# LN: 55 | 
+396   	 009A	 48407FFF		x0 = a0			# LN: 55 | 
+397   	 009B	 81040001		x1 = xmem[_GlobalInverterData + 1]			# LN: 57 | 
+398   	 009C	 00002080		a0 = x0 * x1			# LN: 57 | 
+399   	 009D	 48487FFF		a0 = a0			# LN: 57 | 
+400   	 009E	 80880191		call (_saturation)			# LN: 57 | 
+401   	 009F	 81880000		ret			# LN: 58 | 
+402   						
+403   						
+404   						
+405   	 00A0				_initGainProcessing:			/* LN: 22 | CYCLE: 0 | RULES: () */ 
+406   	 00A0	 98440000		xmem[_GlobalInputGain + 0] = a0h			# LN: 24 | 
+407   	 00A1	 99440000		xmem[_GlobalHeadroomGain + 0] = a1h			# LN: 25 | 
+408   	 00A2	 81880000		ret			# LN: 26 | 
+409   						
+410   						
+411   						
+412   							# This construction should ensure linking of crt0 in case when target is a standalone program without the OS
+413   							.if defined(_OVLY_)
+414   								.if .strcmp('standalone',_OVLY_)=0
+415   								.if .strcmp('crystal32',_TARGET_FAMILY_)=0
+416   	 0000							.extern __start         # dummy use of __start to force linkage of crt0
+417   	 0000				dummy		.equ(__start)
+418   								.else
+419   									.extern __intvec         # dummy use of __intvec to force linkage of intvec
+420   						dummy		.equ(__intvec)
+421   								.endif
+422   								.endif
+423   							.endif
+424   						
+425   	 00A3				_main:			/* LN: 148 | CYCLE: 0 | RULES: () */ 
+426   	 00A3	 B2540017		xmem[i7] = i2; i7 += 1			# LN: 148, 148 | 
+427   	 00A4	 A2540017		xmem[i7] = a2g; i7 += 1			# LN: 148, 148 | 
+428   	 00A5	 9A540017		xmem[i7] = a2h; i7 += 1			# LN: 148, 148 | 
+429   	 00A6	 92540017		xmem[i7] = a2l; i7 += 1			# LN: 148, 148 | 
+430   	 00A7	 B3540017		xmem[i7] = i3; i7 += 1			# LN: 148, 148 | 
+431   	 00A8	 A6540017		xmem[i7] = b2g; i7 += 1			# LN: 148, 148 | 
+432   	 00A9	 9E540017		xmem[i7] = b2h; i7 += 1			# LN: 148, 148 | 
+433   	 00AA	 96540017		xmem[i7] = b2l; i7 += 1			# LN: 148, 148 | 
+434   	 00AB	 A3540017		xmem[i7] = a3g; i7 += 1			# LN: 148, 148 | 
+435   	 00AC	 9B540017		xmem[i7] = a3h; i7 += 1			# LN: 148, 148 | 
+436   	 00AD	 93540017		xmem[i7] = a3l; i7 += 1			# LN: 148, 148 | 
+437   	 00AE	 A7540017		xmem[i7] = b3g; i7 += 1			# LN: 148, 148 | 
+438   	 00AF	 9F540017		xmem[i7] = b3h; i7 += 1			# LN: 148, 148 | 
+439   	 00B0	 97540017		xmem[i7] = b3l; i7 += 1			# LN: 148, 148 | 
+440   	 00B1	 87750204		i7 = i7 + (0x204)			# LN: 148 | 
+441   	 00B2	 B0090032		i2 = i0			# LN: 148 | 
+442   	 00B3	 B2090030		i0 = i2			# LN: 171 | 
+443   	 00B4	 88040000		a0 = xmem[__extractedConst_1_3 + 0]			# LN: 165 | 
+444   	 00B5	 91750204		i1 = i7 - (0x204)			# LN: 165 | 
+445   	 00B6	 98540001		xmem[i1] = a0h			# LN: 165 | 
+446   	 00B7	 02287FFF		i0 += 2			# LN: 171 | 
+447   	 00B8	 B0140000		i0 = xmem[i0]			# LN: 171 | 
+448   	 00B9	 88040000		a0 = xmem[__extractedConst_4_1 + 0]			# LN: 166 | 
+449   	 00BA	 94750203		i4 = i7 - (0x203)			# LN: 166 | 
+450   	 00BB	 98540004		xmem[i4] = a0h			# LN: 166 | 
+451   	 00BC	 A1050000		i1 = (0) + (_string_const_1)			# LN: 171 | 
+452   	 00BD	 80880000		call (_strcmp)			# LN: 171 | 
+453   	 00BE	 00004E80		a0 & a0			# LN: 171 | 
+454   	 00BF	 844800C4		if (a != 0) jmp (else_3)			# LN: 171 | 
+455   	 00C0	 00004DC0		a0 = 0			# LN: 172 | 
+456   	 00C1	 90750201		i0 = i7 - (0x201)			# LN: 172 | 
+457   	 00C2	 98540000		xmem[i0] = a0h			# LN: 172 | 
+458   	 00C3	 800800C7		jmp (endif_3)			# LN: 172 | 
+459   	 00C4				else_3:			/* LN: 171 | CYCLE: 0 | RULES: () */ 
+460   	 00C4	 884A0001		uhalfword(a0) = (0x1)			# LN: 174 | 
+461   	 00C5	 90750201		i0 = i7 - (0x201)			# LN: 174 | 
+462   	 00C6	 98540000		xmem[i0] = a0h			# LN: 174 | 
+463   	 00C7				endif_3:			/* LN: 171 | CYCLE: 0 | RULES: () */ 
+464   	 00C7	 80250003		i0 = i2 + (0x3)			# LN: 176 | 
+465   	 00C8	 B0140000		i0 = xmem[i0]			# LN: 176 | 
+466   	 00C9	 A1050000		i1 = (0) + (_string_const_2)			# LN: 176 | 
+467   	 00CA	 80880000		call (_strcmp)			# LN: 176 | 
+468   	 00CB	 00004E80		a0 & a0			# LN: 176 | 
+469   	 00CC	 844800D1		if (a != 0) jmp (else_4)			# LN: 176 | 
+470   	 00CD	 88040000		a0 = xmem[__extractedConst_5_2 + 0]			# LN: 177 | 
+471   	 00CE	 90750204		i0 = i7 - (0x204)			# LN: 177 | 
+472   	 00CF	 98540000		xmem[i0] = a0h			# LN: 177 | 
+473   	 00D0	 800800DA		jmp (endif_4)			# LN: 177 | 
+474   	 00D1				else_4:			/* LN: 176 | CYCLE: 0 | RULES: () */ 
+475   	 00D1	 80250003		i0 = i2 + (0x3)			# LN: 178 | 
+476   	 00D2	 B0140000		i0 = xmem[i0]			# LN: 178 | 
+477   	 00D3	 A1050000		i1 = (0) + (_string_const_3)			# LN: 178 | 
+478   	 00D4	 80880000		call (_strcmp)			# LN: 178 | 
+479   	 00D5	 00004E80		a0 & a0			# LN: 178 | 
+480   	 00D6	 844800DA		if (a != 0) jmp (else_5)			# LN: 178 | 
+481   	 00D7	 88040000		a0 = xmem[__extractedConst_6_2 + 0]			# LN: 179 | 
+482   	 00D8	 90750204		i0 = i7 - (0x204)			# LN: 179 | 
+483   	 00D9	 98540000		xmem[i0] = a0h			# LN: 179 | 
+484   	 00DA				endif_4:			/* LN: 176 | CYCLE: 0 | RULES: () */ 
+485   	 00DA				endif_5:			/* LN: 178 | CYCLE: 0 | RULES: () */ 
+486   	 00DA				else_5:			/* LN: 178 | CYCLE: 0 | RULES: () */ 
+487   	 00DA	 80250004		i0 = i2 + (0x4)			# LN: 181 | 
+488   	 00DB	 B0140000		i0 = xmem[i0]			# LN: 181 | 
+489   	 00DC	 A1050000		i1 = (0) + (_string_const_4)			# LN: 181 | 
+490   	 00DD	 80880000		call (_strcmp)			# LN: 181 | 
+491   	 00DE	 00004E80		a0 & a0			# LN: 181 | 
+492   	 00DF	 844800E4		if (a != 0) jmp (else_6)			# LN: 181 | 
+493   	 00E0	 88040000		a0 = xmem[__extractedConst_5_2 + 0]			# LN: 182 | 
+494   	 00E1	 90750203		i0 = i7 - (0x203)			# LN: 182 | 
+495   	 00E2	 98540000		xmem[i0] = a0h			# LN: 182 | 
+496   	 00E3	 800800ED		jmp (endif_6)			# LN: 182 | 
+497   	 00E4				else_6:			/* LN: 181 | CYCLE: 0 | RULES: () */ 
+498   	 00E4	 80250004		i0 = i2 + (0x4)			# LN: 183 | 
+499   	 00E5	 B0140000		i0 = xmem[i0]			# LN: 183 | 
+500   	 00E6	 A1050000		i1 = (0) + (_string_const_5)			# LN: 183 | 
+501   	 00E7	 80880000		call (_strcmp)			# LN: 183 | 
+502   	 00E8	 00004E80		a0 & a0			# LN: 183 | 
+503   	 00E9	 844800ED		if (a != 0) jmp (else_7)			# LN: 183 | 
+504   	 00EA	 88040000		a0 = xmem[__extractedConst_6_2 + 0]			# LN: 184 | 
+505   	 00EB	 90750203		i0 = i7 - (0x203)			# LN: 184 | 
+506   	 00EC	 98540000		xmem[i0] = a0h			# LN: 184 | 
+507   	 00ED				endif_6:			/* LN: 181 | CYCLE: 0 | RULES: () */ 
+508   	 00ED				endif_7:			/* LN: 183 | CYCLE: 0 | RULES: () */ 
+509   	 00ED				else_7:			/* LN: 183 | CYCLE: 0 | RULES: () */ 
+510   	 00ED	 A0050000		i0 = (0) + (_GlobalInverterData)			# LN: 187 | 
+511   	 00EE	 80880000		call (_audio_invert_init)			# LN: 187 | 
+512   	 00EF	 00004DC0		a0 = 0			# LN: 190 | 
+513   	 00F0	 808000FE		do (0x8), label_end_94			# LN: 190 | 
+514   	 00F1				label_begin_94:			/* LN: 190 | CYCLE: 0 | RULES: () */ 
+515   	 00F1	 00004DC1		a1 = 0			# LN: 191 | 
+516   	 00F2	 810000FC		do (0x10), label_end_93			# LN: 191 | 
+517   	 00F3				label_begin_93:			/* LN: 191 | CYCLE: 0 | RULES: () */ 
+518   	 00F3	 00004C24		b0 =+ a0			# LN: 192 | 
+519   	 00F4	 00004EC4		b0 = b0 << 4			# LN: 192 | 
+520   	 00F5	 4C704DC4		i0 = b0; b0 = 0			# LN: 192, 192 | 
+521   	 00F6	 8D4A0001		uhalfword(b1) = (0x1)			# LN: 191 | 
+522   	 00F7	 80050000		i0 = i0 + (_sampleBuffer + 0)			# LN: 192 | 
+523   	 00F8	 0A707FFF		a2 = i0			# LN: 192 | 
+524   	 00F9	 0000450A		a2 = a2 + a1			# LN: 192 | 
+525   	 00FA	 9A090030		AnyReg(i0, a2h)			# LN: 192 | 
+526   	 00FB	 000044A9		a1 = a1 + b1			# LN: 191 | 
+527   	 00FC				label_end_93:			# LN: 191 | CYCLE: 9 | RULES: ()
+528   	 00FC	 9C540000		xmem[i0] = b0h			# LN: 192 | 
+529   	 00FD				init_latch_label_2:			/* LN: 192 | CYCLE: 0 | RULES: () */ 
+530   	 00FD				for_end_2:			/* LN: 191 | CYCLE: 0 | RULES: () */ 
+531   	 00FD	 894A0001		uhalfword(a1) = (0x1)			# LN: 190 | 
+532   	 00FE				label_end_94:			# LN: 190 | CYCLE: 1 | RULES: ()
+533   	 00FE	 00004408		a0 = a0 + a1			# LN: 190 | 
+534   	 00FF				for_end_1:			/* LN: 190 | CYCLE: 0 | RULES: () */ 
+535   	 00FF	 B1140002		i1 = xmem[i2]			# LN: 196 | 
+536   	 0100	 90750100		i0 = i7 - (256 - 0)			# LN: 196 | 
+537   	 0101	 80880000		call (_strcpy)			# LN: 196 | 
+538   	 0102	 90750100		i0 = i7 - (256 - 0)			# LN: 197 | 
+539   	 0103	 80880000		call (_cl_wavread_open)			# LN: 197 | 
+540   	 0104	 98090033		AnyReg(i3, a0h)			# LN: 197 | 
+541   	 0105	 08737FFF		a0 = i3			# LN: 198 | 
+542   	 0106	 00004E80		a0 & a0			# LN: 198 | 
+543   	 0107	 8448010C		if (a != 0) jmp (else_8)			# LN: 198 | 
+544   	 0108	 A0050000		i0 = (0) + (_string_const_6)			# LN: 200 | 
+545   	 0109	 80880000		call (_printf)			# LN: 200 | 
+546   	 010A	 886AFFFF		halfword(a0) = (0xffff)			# LN: 201 | 
+547   	 010B	 80080180		jmp (__epilogue_260)			# LN: 201 | 
+548   	 010C				endif_8:			/* LN: 198 | CYCLE: 0 | RULES: () */ 
+549   	 010C				else_8:			/* LN: 198 | CYCLE: 0 | RULES: () */ 
+550   	 010C	 B3090030		i0 = i3			# LN: 207 | 
+551   	 010D	 80880000		call (_cl_wavread_getnchannels)			# LN: 207 | 
+552   	 010E	 90750202		i0 = i7 - (0x202)			# LN: 207 | 
+553   	 010F	 98540000		xmem[i0] = a0h			# LN: 207 | 
+554   	 0110	 B3090030		i0 = i3			# LN: 208 | 
+555   	 0111	 80880000		call (_cl_wavread_bits_per_sample)			# LN: 208 | 
+556   	 0112	 00004C02		a2 =+ a0			# LN: 208 | 
+557   	 0113	 B3090030		i0 = i3			# LN: 209 | 
+558   	 0114	 80880000		call (_cl_wavread_frame_rate)			# LN: 209 | 
+559   	 0115	 00004C26		b2 =+ a0			# LN: 209 | 
+560   	 0116	 B3090030		i0 = i3			# LN: 210 | 
+561   	 0117	 80880000		call (_cl_wavread_number_of_frames)			# LN: 210 | 
+562   	 0118	 B2090030		i0 = i2			# LN: 215 | 
+563   	 0119	 91750200		i1 = i7 - (512 - 0)			# LN: 215 | 
+564   	 011A	 02084C03		i0 += 1; a3 =+ a0			# LN: 215, 210 | 
+565   	 011B	 B8140000		i4 = xmem[i0]			# LN: 215 | 
+566   	 011C	 B1090030		i0 = i1			# LN: 215 | 
+567   	 011D	 B8090031		i1 = i4			# LN: 215 | 
+568   	 011E	 80880000		call (_strcpy)			# LN: 215 | 
+569   	 011F	 84250005		i4 = i2 + (0x5)			# LN: 217 | 
+570   	 0120	 B1140004		i1 = xmem[i4]			# LN: 217 | 
+571   	 0121	 A0050000		i0 = (0) + (_OutputModeFlag)			# LN: 217 | 
+572   	 0122	 80880000		call (_strcpy)			# LN: 217 | 
+573   	 0123	 B0140004		i0 = xmem[i4]			# LN: 219 | 
+574   	 0124	 A1050000		i1 = (0) + (_string_const_7)			# LN: 219 | 
+575   	 0125	 80880000		call (_strcmp)			# LN: 219 | 
+576   	 0126	 8F4A0002		uhalfword(b3) = (0x2)			# LN: 218 | 
+577   	 0127	 00004E80		a0 & a0			# LN: 219 | 
+578   	 0128	 8448012E		if (a != 0) jmp (else_9)			# LN: 219 | 
+579   	 0129	 90750201		i0 = i7 - (0x201)			# LN: 219 | 
+580   	 012A	 88140000		a0 = xmem[i0]			# LN: 219 | 
+581   	 012B	 00004E80		a0 & a0			# LN: 219 | 
+582   	 012C	 8408012E		if (a == 0) jmp (else_9)			# LN: 219 | 
+583   	 012D	 8F4A0005		uhalfword(b3) = (0x5)			# LN: 220 | 
+584   	 012E				endif_9:			/* LN: 219 | CYCLE: 0 | RULES: () */ 
+585   	 012E				else_9:			/* LN: 219 | CYCLE: 0 | RULES: () */ 
+586   	 012E	 90750200		i0 = i7 - (512 - 0)			# LN: 222 | 
+587   	 012F	 00005C10		a0 =+ a2; b0 =+ b2			# LN: 222, 222 | 
+588   	 0130	 00004C39		a1 =+ b3			# LN: 222 | 
+589   	 0131	 80880000		call (_cl_wavwrite_open)			# LN: 222 | 
+590   	 0132	 98090032		AnyReg(i2, a0h)			# LN: 222 | 
+591   	 0133	 08727FFF		a0 = i2			# LN: 223 | 
+592   	 0134	 00004E80		a0 & a0			# LN: 223 | 
+593   	 0135	 8448013A		if (a != 0) jmp (else_10)			# LN: 223 | 
+594   	 0136	 A0050000		i0 = (0) + (_string_const_8)			# LN: 225 | 
+595   	 0137	 80880000		call (_printf)			# LN: 225 | 
+596   	 0138	 886AFFFF		halfword(a0) = (0xffff)			# LN: 226 | 
+597   	 0139	 80080180		jmp (__epilogue_260)			# LN: 226 | 
+598   	 013A				endif_10:			/* LN: 223 | CYCLE: 0 | RULES: () */ 
+599   	 013A				else_10:			/* LN: 223 | CYCLE: 0 | RULES: () */ 
+600   	 013A	 90750203		i0 = i7 - (0x203)			# LN: 231 | 
+601   	 013B	 91750204		i1 = i7 - (0x204)			# LN: 231 | 
+602   	 013C	 88140001		a0 = xmem[i1]			# LN: 231 | 
+603   	 013D	 89140000		a1 = xmem[i0]			# LN: 231 | 
+604   	 013E	 808800A0		call (_initGainProcessing)			# LN: 231 | 
+605   	 013F	 894A0010		uhalfword(a1) = (0x10)			# LN: 243 | 
+606   	 0140	 00004C18		a0 =+ a3			# LN: 243 | 
+607   	 0141	 80880000		call (__div)			# LN: 243 | 
+608   	 0142	 98090030		AnyReg(i0, a0h)			# LN: 243 | 
+609   	 0143	 00007FFF		nop #empty cycle
+610   	 0144	 8001017A		do (i0), label_end_99			# LN: 243 | 
+611   	 0145				label_begin_99:			/* LN: 243 | CYCLE: 0 | RULES: () */ 
+612   	 0145	 00004DC2		a2 = 0			# LN: 245 | 
+613   	 0146	 81000159		do (0x10), label_end_96			# LN: 245 | 
+614   	 0147				label_begin_96:			/* LN: 245 | CYCLE: 0 | RULES: () */ 
+615   	 0147	 90750202		i0 = i7 - (0x202)			# LN: 247 | 
+616   	 0148	 18404DC4		a0 = xmem[i0]; b0 = 0			# LN: 247, 247 | 
+617   	 0149	 98090030		AnyReg(i0, a0h)			# LN: 247 | 
+618   	 014A	 00007FFF		nop #empty cycle
+619   	 014B	 80010157		do (i0), label_end_95			# LN: 247 | 
+620   	 014C				label_begin_95:			/* LN: 247 | CYCLE: 0 | RULES: () */ 
+621   	 014C	 B3090030		i0 = i3			# LN: 249 | 
+622   	 014D	 80880000		call (_cl_wavread_recvsample)			# LN: 249 | 
+623   	 014E	 00005C01		a1 =+ a0; b1 =+ b0			# LN: 249, 250 | 
+624   	 014F	 00004EC5		b1 = b1 << 4			# LN: 250 | 
+625   	 0150	 4D704C08		i0 = b1; a0 =+ a1			# LN: 250, 250 | 
+626   	 0151	 894A0001		uhalfword(a1) = (0x1)			# LN: 247 | 
+627   	 0152	 80050000		i0 = i0 + (_sampleBuffer + 0)			# LN: 250 | 
+628   	 0153	 0D70442C		b1 = i0; b0 = b0 + a1			# LN: 250, 247 | 
+629   	 0154	 00004529		a1 = a2 + b1			# LN: 250 | 
+630   	 0155	 99090030		AnyReg(i0, a1h)			# LN: 250 | 
+631   	 0156	 00007FFF		nop #empty cycle
+632   	 0157				label_end_95:			# LN: 247 | CYCLE: 11 | RULES: ()
+633   	 0157	 98540000		xmem[i0] = a0h			# LN: 250 | 
+634   	 0158				init_latch_label_4:			/* LN: 252 | CYCLE: 0 | RULES: () */ 
+635   	 0158				for_end_5:			/* LN: 247 | CYCLE: 0 | RULES: () */ 
+636   	 0158	 884A0001		uhalfword(a0) = (0x1)			# LN: 245 | 
+637   	 0159				label_end_96:			# LN: 245 | CYCLE: 1 | RULES: ()
+638   	 0159	 00004502		a2 = a2 + a0			# LN: 245 | 
+639   	 015A				for_end_4:			/* LN: 245 | CYCLE: 0 | RULES: () */ 
+640   	 015A	 90750201		i0 = i7 - (0x201)			# LN: 254 | 
+641   	 015B	 88140000		a0 = xmem[i0]			# LN: 254 | 
+642   	 015C	 00004E80		a0 & a0			# LN: 254 | 
+643   	 015D	 84080167		if (a == 0) jmp (else_11)			# LN: 254 | 
+644   	 015E	 80880000		call (_cl_get_cycle_count)			# LN: 256 | 
+645   	 015F	 A0050000		i0 = (0) + (_sampleBuffer)			# LN: 258 | 
+646   	 0160	 A1050000		i1 = (0) + (_sampleBuffer)			# LN: 258 | 
+647   	 0161	 00004C02		a2 =+ a0			# LN: 256 | 
+648   	 0162	 80880005		call (_gainProcessing)			# LN: 258 | 
+649   	 0163	 80880000		call (_cl_get_cycle_count)			# LN: 260 | 
+650   	 0164	 00004450		a0 = a0 - a2			# LN: 261 | 
+651   	 0165	 A0050000		i0 = (0) + (_string_const_9)			# LN: 262 | 
+652   	 0166	 80880000		call (_printf)			# LN: 262 | 
+653   	 0167				endif_11:			/* LN: 254 | CYCLE: 0 | RULES: () */ 
+654   	 0167				else_11:			/* LN: 254 | CYCLE: 0 | RULES: () */ 
+655   	 0167	 00004DC1		a1 = 0			# LN: 265 | 
+656   	 0168	 81000179		do (0x10), label_end_98			# LN: 265 | 
+657   	 0169				label_begin_98:			/* LN: 265 | CYCLE: 0 | RULES: () */ 
+658   	 0169	 9F090030		AnyReg(i0, b3h)			# LN: 267 | 
+659   	 016A	 00004DC4		b0 = 0			# LN: 267 | 
+660   	 016B	 80010177		do (i0), label_end_97			# LN: 267 | 
+661   	 016C				label_begin_97:			/* LN: 267 | CYCLE: 0 | RULES: () */ 
+662   	 016C	 00004C20		a0 =+ b0			# LN: 269 | 
+663   	 016D	 00004EC0		a0 = a0 << 4			# LN: 269 | 
+664   	 016E	 48717FFF		i1 = a0			# LN: 269 | 
+665   	 016F	 B2090030		i0 = i2			# LN: 270 | 
+666   	 0170	 81150000		i1 = i1 + (_sampleBuffer + 0)			# LN: 269 | 
+667   	 0171	 08717FFF		a0 = i1			# LN: 269 | 
+668   	 0172	 00004408		a0 = a0 + a1			# LN: 269 | 
+669   	 0173	 98090031		AnyReg(i1, a0h)			# LN: 269 | 
+670   	 0174	 884A0001		uhalfword(a0) = (0x1)			# LN: 267 | 
+671   	 0175	 1D414424		b1 = xmem[i1]; b0 = b0 + a0			# LN: 269, 267 | 
+672   	 0176	 00004C28		a0 =+ b1			# LN: 269 | 
+673   	 0177				label_end_97:			# LN: 267 | CYCLE: 11 | RULES: ()
+674   	 0177	 80880000		call (_cl_wavwrite_sendsample)			# LN: 270 | 
+675   	 0178				init_latch_label_6:			/* LN: 272 | CYCLE: 0 | RULES: () */ 
+676   	 0178				for_end_7:			/* LN: 267 | CYCLE: 0 | RULES: () */ 
+677   	 0178	 884A0001		uhalfword(a0) = (0x1)			# LN: 265 | 
+678   	 0179				label_end_98:			# LN: 265 | CYCLE: 1 | RULES: ()
+679   	 0179	 00004481		a1 = a1 + a0			# LN: 265 | 
+680   	 017A				init_latch_label_7:			/* LN: 273 | CYCLE: 0 | RULES: () */ 
+681   	 017A				for_end_6:			/* LN: 265 | CYCLE: 0 | RULES: () */ 
+682   	 017A				label_end_99:			# LN: 243 | CYCLE: 0 | RULES: ()
+683   	 017A	 00007FFF		nop #empty cycle
+684   	 017B				for_end_3:			/* LN: 243 | CYCLE: 0 | RULES: () */ 
+685   	 017B	 B3090030		i0 = i3			# LN: 278 | 
+686   	 017C	 80880000		call (_cl_wavread_close)			# LN: 278 | 
+687   	 017D	 B2090030		i0 = i2			# LN: 279 | 
+688   	 017E	 80880000		call (_cl_wavwrite_close)			# LN: 279 | 
+689   	 017F	 00004DC0		a0 = 0			# LN: 282 | 
+690   	 0180				__epilogue_260:			/* LN: 283 | CYCLE: 0 | RULES: () */ 
+691   	 0180	 97750204		i7 = i7 - (0x204)			# LN: 283 | 
+692   	 0181	 02177FFF		i7 -= 1			# LN: 283 | 
+693   	 0182	 97140027		b3l = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+694   	 0183	 9F140027		b3h = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+695   	 0184	 A7140027		b3g = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+696   	 0185	 93140027		a3l = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+697   	 0186	 9B140027		a3h = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+698   	 0187	 A3140027		a3g = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+699   	 0188	 96140027		b2l = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+700   	 0189	 9E140027		b2h = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+701   	 018A	 A6140027		b2g = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+702   	 018B	 B3140027		i3 = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+703   	 018C	 92140027		a2l = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+704   	 018D	 9A140027		a2h = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+705   	 018E	 A2140027		a2g = xmem[i7]; i7 -= 1			# LN: 283, 283 | 
+706   	 018F	 B2140007		i2 = xmem[i7]			# LN: 283 | 
+707   	 0190	 81880000		ret			# LN: 283 | 
+708   						
+709   						
+710   						
+711   	 0191				_saturation:			/* LN: 28 | CYCLE: 0 | RULES: () */ 
+712   	 0191	 89040000		a1 = xmem[_GlobalLimiterThreshold + 0]			# LN: 30 | 
+713   	 0192	 00004F08		a0 - a1			# LN: 30 | 
+714   	 0193	 85080196		if (a <= 0) jmp (else_0)			# LN: 30 | 
+715   	 0194	 88040000		a0 = xmem[_GlobalLimiterThreshold + 0]			# LN: 32 | 
+716   	 0195	 8008019D		jmp (__epilogue_252)			# LN: 32 | 
+717   	 0196				else_0:			/* LN: 30 | CYCLE: 0 | RULES: () */ 
+718   	 0196	 89040000		a1 = xmem[_GlobalLimiterThreshold + 0]			# LN: 34 | 
+719   	 0197	 00004C89		a1 =- a1			# LN: 34 | 
+720   	 0198	 00004F08		a0 - a1			# LN: 34 | 
+721   	 0199	 84C8019D		if (a >= 0) jmp (else_1)			# LN: 34 | 
+722   	 019A	 88040000		a0 = xmem[_GlobalLimiterThreshold + 0]			# LN: 36 | 
+723   	 019B	 00004C80		a0 =- a0			# LN: 36 | 
+724   	 019C	 8008019D		jmp (__epilogue_252)			# LN: 36 | 
+725   	 019D				__epilogue_252:			/* LN: 40 | CYCLE: 0 | RULES: () */ 
+726   	 019D				endif_0:			/* LN: 30 | CYCLE: 0 | RULES: () */ 
+727   	 019D				endif_1:			/* LN: 34 | CYCLE: 0 | RULES: () */ 
+728   	 019D				else_1:			/* LN: 34 | CYCLE: 0 | RULES: () */ 
+729   	 019D	 81880000		ret			# LN: 40 | 
+730   						(null)
+				 SYMBOL TABLE 
+
+    Name                                                                                    Type                  Value 
+
+_COMMON_INC_PATH_                                                               					 Define                 "C:/CirrusDSP/crystal32/common/inc/"
+_DSP_                                                                           					 Define                 "a"
+_GlobalHeadroomGain                                                             			         Relocatable         main_GEN_0001:0000H
+_GlobalInputGain                                                                			         Relocatable         main_GEN_0002:0000H
+_GlobalInverterData                                                             			  Struct Relocatable   main_GEN_0003:0000H
+_GlobalInverterData._degree                                                     			  Unused Relocatable        main_GEN_0003:0000H
+_GlobalInverterData._gain                                                       			  Unused Relocatable        main_GEN_0003:0001H
+_GlobalLimiterThreshold                                                         			         Relocatable         main_GEN_0004:0000H
+_LOCAL_INC_PATH_                                                                					 Define                 "inc/"
+_LOCAL_SRC_PATH_                                                                					 Define                 "src/"
+_MUI_VERSION_                                                                   					 Define                 "020000"
+_OVLY_                                                                          					 Define                 "standalone"
+_OVLY_REVISION_                                                                 					 Define                 "020000"
+_OutputModeFlag                                                                 			         Relocatable         main_GEN_0005:0000H
+_ROUTER_INC_PATH_                                                               					 Define                 "rom_inc/"
+_SLOT_                                                                          					 Define                 "0"
+_TARGET_FAMILY_                                                                 					 Define                 "crystal32"
+_TOOLS_VERSION_                                                                 					 Define                 "0x0701"
+_VERSION_                                                                       					 Define                 "00"
+__CASM_VER__                                                                    			  Unused Variable		        0 (701H)
+___TIMER0_COUNT                                                                 					 External   
+___TIMER1_COUNT                                                                 					 External   
+___TIMER1_ENABLE                                                                					 External   
+__div                                                                           					 External   
+__epilogue_252                                                                  			         Relocatable         main_GEN_0024:019DH
+__epilogue_260                                                                  			         Relocatable         main_GEN_0024:0180H
+__extractedConst_0_1                                                            			         Relocatable         main_GEN_0006:0000H
+__extractedConst_1_3                                                            			         Relocatable         main_GEN_0007:0000H
+__extractedConst_2_2                                                            			         Relocatable         main_GEN_0008:0000H
+__extractedConst_3_2                                                            			         Relocatable         main_GEN_0009:0000H
+__extractedConst_4_1                                                            			         Relocatable         main_GEN_0010:0000H
+__extractedConst_5_2                                                            			         Relocatable         main_GEN_0011:0000H
+__extractedConst_6_2                                                            			         Relocatable         main_GEN_0012:0000H
+__start                                                                         					 External   
+_audio_invert_init                                                              			  Public Relocatable       main_GEN_0024:0000H
+_cl_get_cycle_count                                                             					 External   
+_cl_wavread_bits_per_sample                                                     					 External   
+_cl_wavread_close                                                               					 External   
+_cl_wavread_frame_rate                                                          					 External   
+_cl_wavread_getnchannels                                                        					 External   
+_cl_wavread_number_of_frames                                                    					 External   
+_cl_wavread_open                                                                					 External   
+_cl_wavread_recvsample                                                          					 External   
+_cl_wavwrite_close                                                              					 External   
+_cl_wavwrite_open                                                               					 External   
+_cl_wavwrite_sendsample                                                         					 External   
+_gainProcessing                                                                 			  Public Relocatable       main_GEN_0024:0005H
+_gst_audio_invert_transform                                                     			         Relocatable         main_GEN_0024:0092H
+_initGainProcessing                                                             			  Public Relocatable       main_GEN_0024:00A0H
+_main                                                                           			  Public Relocatable       main_GEN_0024:00A3H
+_printf                                                                         					 External   
+_sampleBuffer                                                                   			         Relocatable         main_GEN_0013:0000H
+_saturation                                                                     			  Public Relocatable       main_GEN_0024:0191H
+_strcmp                                                                         					 External   
+_strcpy                                                                         					 External   
+_string_const_0                                                                 			         Relocatable         main_GEN_0014:0000H
+_string_const_1                                                                 			         Relocatable         main_GEN_0015:0000H
+_string_const_2                                                                 			         Relocatable         main_GEN_0016:0000H
+_string_const_3                                                                 			         Relocatable         main_GEN_0017:0000H
+_string_const_4                                                                 			         Relocatable         main_GEN_0018:0000H
+_string_const_5                                                                 			         Relocatable         main_GEN_0019:0000H
+_string_const_6                                                                 			         Relocatable         main_GEN_0020:0000H
+_string_const_7                                                                 			         Relocatable         main_GEN_0021:0000H
+_string_const_8                                                                 			         Relocatable         main_GEN_0022:0000H
+_string_const_9                                                                 			         Relocatable         main_GEN_0023:0000H
+dummy                                                                           			  Unused Number				     0 (0H)
+else_0                                                                          			         Relocatable         main_GEN_0024:0196H
+else_1                                                                          			         Relocatable         main_GEN_0024:019DH
+else_10                                                                         			         Relocatable         main_GEN_0024:013AH
+else_11                                                                         			         Relocatable         main_GEN_0024:0167H
+else_2                                                                          			         Relocatable         main_GEN_0024:0075H
+else_3                                                                          			         Relocatable         main_GEN_0024:00C4H
+else_4                                                                          			         Relocatable         main_GEN_0024:00D1H
+else_5                                                                          			         Relocatable         main_GEN_0024:00DAH
+else_6                                                                          			         Relocatable         main_GEN_0024:00E4H
+else_7                                                                          			         Relocatable         main_GEN_0024:00EDH
+else_8                                                                          			         Relocatable         main_GEN_0024:010CH
+else_9                                                                          			         Relocatable         main_GEN_0024:012EH
+endif_0                                                                         			  Unused Relocatable        main_GEN_0024:019DH
+endif_1                                                                         			  Unused Relocatable        main_GEN_0024:019DH
+endif_10                                                                        			  Unused Relocatable        main_GEN_0024:013AH
+endif_11                                                                        			  Unused Relocatable        main_GEN_0024:0167H
+endif_2                                                                         			  Unused Relocatable        main_GEN_0024:0075H
+endif_3                                                                         			         Relocatable         main_GEN_0024:00C7H
+endif_4                                                                         			         Relocatable         main_GEN_0024:00DAH
+endif_5                                                                         			  Unused Relocatable        main_GEN_0024:00DAH
+endif_6                                                                         			         Relocatable         main_GEN_0024:00EDH
+endif_7                                                                         			  Unused Relocatable        main_GEN_0024:00EDH
+endif_8                                                                         			  Unused Relocatable        main_GEN_0024:010CH
+endif_9                                                                         			  Unused Relocatable        main_GEN_0024:012EH
+for_end_0                                                                       			  Unused Relocatable        main_GEN_0024:008CH
+for_end_1                                                                       			  Unused Relocatable        main_GEN_0024:00FFH
+for_end_2                                                                       			  Unused Relocatable        main_GEN_0024:00FDH
+for_end_3                                                                       			  Unused Relocatable        main_GEN_0024:017BH
+for_end_4                                                                       			  Unused Relocatable        main_GEN_0024:015AH
+for_end_5                                                                       			  Unused Relocatable        main_GEN_0024:0158H
+for_end_6                                                                       			  Unused Relocatable        main_GEN_0024:017AH
+for_end_7                                                                       			  Unused Relocatable        main_GEN_0024:0178H
+init_latch_label_2                                                              			  Unused Relocatable        main_GEN_0024:00FDH
+init_latch_label_4                                                              			  Unused Relocatable        main_GEN_0024:0158H
+init_latch_label_6                                                              			  Unused Relocatable        main_GEN_0024:0178H
+init_latch_label_7                                                              			  Unused Relocatable        main_GEN_0024:017AH
+label_begin_92                                                                  			  Unused Relocatable        main_GEN_0024:001BH
+label_begin_93                                                                  			  Unused Relocatable        main_GEN_0024:00F3H
+label_begin_94                                                                  			  Unused Relocatable        main_GEN_0024:00F1H
+label_begin_95                                                                  			  Unused Relocatable        main_GEN_0024:014CH
+label_begin_96                                                                  			  Unused Relocatable        main_GEN_0024:0147H
+label_begin_97                                                                  			  Unused Relocatable        main_GEN_0024:016CH
+label_begin_98                                                                  			  Unused Relocatable        main_GEN_0024:0169H
+label_begin_99                                                                  			  Unused Relocatable        main_GEN_0024:0145H
+label_end_92                                                                    			         Relocatable         main_GEN_0024:008BH
+label_end_93                                                                    			         Relocatable         main_GEN_0024:00FCH
+label_end_94                                                                    			         Relocatable         main_GEN_0024:00FEH
+label_end_95                                                                    			         Relocatable         main_GEN_0024:0157H
+label_end_96                                                                    			         Relocatable         main_GEN_0024:0159H
+label_end_97                                                                    			         Relocatable         main_GEN_0024:0177H
+label_end_98                                                                    			         Relocatable         main_GEN_0024:0179H
+label_end_99                                                                    			         Relocatable         main_GEN_0024:017AH
+
+	       SEGMENTS:
+
+Size			  Name										 Class
+0000H	 __INIT                                  			 CODE                                    
+0000H	 main_GEN_0000                           			 X_OVLY                                  
+0001H	 main_GEN_0001                           			 X_OVLY                                  
+0001H	 main_GEN_0002                           			 X_OVLY                                  
+0002H	 main_GEN_0003                           			 X_OVLY                                  
+0001H	 main_GEN_0004                           			 X_OVLY                                  
+0006H	 main_GEN_0005                           			 X_OVLY                                  
+0001H	 main_GEN_0006                           			 X_OVLY                                  
+0001H	 main_GEN_0007                           			 X_OVLY                                  
+0001H	 main_GEN_0008                           			 X_OVLY                                  
+0001H	 main_GEN_0009                           			 X_OVLY                                  
+0001H	 main_GEN_0010                           			 X_OVLY                                  
+0001H	 main_GEN_0011                           			 X_OVLY                                  
+0001H	 main_GEN_0012                           			 X_OVLY                                  
+0080H	 main_GEN_0013                           			 X_OVLY                                  
+0006H	 main_GEN_0014                           			 X_OVLY                                  
+0002H	 main_GEN_0015                           			 X_OVLY                                  
+0006H	 main_GEN_0016                           			 X_OVLY                                  
+0007H	 main_GEN_0017                           			 X_OVLY                                  
+0006H	 main_GEN_0018                           			 X_OVLY                                  
+0007H	 main_GEN_0019                           			 X_OVLY                                  
+0021H	 main_GEN_0020                           			 X_OVLY                                  
+0006H	 main_GEN_0021                           			 X_OVLY                                  
+0021H	 main_GEN_0022                           			 X_OVLY                                  
+0018H	 main_GEN_0023                           			 X_OVLY                                  
+019EH	 main_GEN_0024                           			 CODE_OVLY                               

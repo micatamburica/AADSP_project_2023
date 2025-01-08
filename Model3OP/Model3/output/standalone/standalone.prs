@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings built="true" last_build_time="1700592675092">
+	<dependencies>
+		<source_file last_build_time="1700583613216" path="src/main.cpp">
+			<dependency>../../../../../../../CirrusDSP/include/stdio.h</dependency>
+			<dependency>../../../../../../../CirrusDSP/include/stdlib.h</dependency>
+			<dependency>../../../../../../../CirrusDSP/include/string.h</dependency>
+			<dependency>../../../../../../../CirrusDSP/include/math.h</dependency>
+			<dependency>../../../../../../../CirrusDSP/include/dsplib/wavefile.h</dependency>
+			<dependency>../../../../../../../CirrusDSP/include/stdfix.h</dependency>
+			<dependency>../../../../../../../CirrusDSP/include/scaling_coeff.h</dependency>
+			<dependency>../inc/common.h</dependency>
+			<dependency>../../../../../../../CirrusDSP/include/dsplib/timers.h</dependency>
+		</source_file>
+		<source_file last_build_time="1700592673396" path="src/GainProcessing.a"/>
+	</dependencies>
+</settings>
