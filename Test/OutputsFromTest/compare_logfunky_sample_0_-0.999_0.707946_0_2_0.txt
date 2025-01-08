@@ -1,0 +1,10 @@
+"c:\Users\Lenovo\Desktop\project\Test\Tools\PCMCompare.exe" -b16 "c:\Users\Lenovo\Desktop\project\Test\test_outputs\funky_sample_0_-0.999_0.707946_0_2_0\out_funky_sample_0_-0.999_0.707946_0_2_0_0.wav" "c:\Users\Lenovo\Desktop\project\Test\test_outputs\funky_sample_0_-0.999_0.707946_0_2_0\out_funky_sample_0_-0.999_0.707946_0_2_0_1.wav"
+      No differences encountered!
+
+      No differences encountered!
+
+"c:\Users\Lenovo\Desktop\project\Test\Tools\PCMCompare.exe" -b16 "c:\Users\Lenovo\Desktop\project\Test\test_outputs\funky_sample_0_-0.999_0.707946_0_2_0\out_funky_sample_0_-0.999_0.707946_0_2_0_1.wav" "c:\Users\Lenovo\Desktop\project\Test\test_outputs\funky_sample_0_-0.999_0.707946_0_2_0\out_funky_sample_0_-0.999_0.707946_0_2_0_2.wav"
+      No differences encountered!
+
+      No differences encountered!
+
